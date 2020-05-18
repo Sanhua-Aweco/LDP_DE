@@ -357,7 +357,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
             .addComponent(jPanelServerSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/magazynview/resources/applications-system.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/magazynview/resources/ico.png")));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -388,7 +388,6 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         jSeparator1.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabelStopka.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabelStopka.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jLabelUser.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelUser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -444,7 +443,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
 
         jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemExit.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jMenuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/magazynMini/resources/system-shutdown.png"))); // NOI18N
+        jMenuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/magazynview/resources/system-shutdown.png"))); // NOI18N
         jMenuItemExit.setText("Exit");
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -460,7 +459,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
 
         jMenuItemConnectionSettings.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemConnectionSettings.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jMenuItemConnectionSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/magazynMini/resources/network-wired.png"))); // NOI18N
+        jMenuItemConnectionSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/magazynview/resources/network-wired.png"))); // NOI18N
         jMenuItemConnectionSettings.setText("Ustawienia serwera");
         jMenuItemConnectionSettings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

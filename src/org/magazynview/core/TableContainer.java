@@ -71,7 +71,7 @@ class TableContainer {
                     jTable.removeColumn(jTable.getColumnModel().getColumn(4));
                     jTable.removeColumn(jTable.getColumnModel().getColumn(3));
                     jTable.removeColumn(jTable.getColumnModel().getColumn(0));
-                    jTable.getColumnModel().getColumn(0).setCellRenderer(new CustomTableCellRenderer(280));
+                    jTable.getColumnModel().getColumn(0).setCellRenderer(new CustomTableCellRenderer(350));
                     jTable.getColumnModel().getColumn(1).setCellRenderer(new CustomTableCellRenderer(20,SwingConstants.CENTER));
                     jTable.getColumnModel().getColumn(2).setCellRenderer(new CustomTableCellRenderer(50,SwingConstants.CENTER));
                     jTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 10));
