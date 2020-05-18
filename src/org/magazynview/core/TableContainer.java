@@ -49,28 +49,31 @@ class TableContainer {
     public void showPozycjaMagazynowa(JTable jTable, JScrollPane jScrollPane) {
         SQLServerConnection conn = connection.getConnectionFromPool();
         try {
-            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynowe(?)}")) {
-                csmt.setInt(1, 0);
+//            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynowe(?)}")) {
+            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynoweFind()}")) {
+//                csmt.setInt(1, 0);
                 tableModelPozycjaMagazynowa = new TableModelPozycjaMagazynowa((SQLServerResultSet) csmt.executeQuery());
                 if (!(tableModelPozycjaMagazynowa.getRowCount() <= 0)) {
                     jTable.setModel(tableModelPozycjaMagazynowa);
                     sorterPozycjaMagazynowa = new TableRowSorter<>(tableModelPozycjaMagazynowa);
                     DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) jTable.getTableHeader().getDefaultRenderer();
                     List<TableRowSorter.SortKey> sortKeys = new ArrayList<>();
-                    sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-                    sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
+//                    sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+                    sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+//                    sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
+                    sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING));
                     sorterPozycjaMagazynowa.setSortKeys(sortKeys);
                     jTable.setRowSorter(sorterPozycjaMagazynowa);
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(12));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(11));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(10));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(9));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(8));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(7));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(6));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(4));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(3));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(12));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(11));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(10));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(9));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(8));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(7));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(6));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(4));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(3));
+//                    jTable.removeColumn(jTable.getColumnModel().getColumn(0));
                     jTable.getColumnModel().getColumn(0).setCellRenderer(new CustomTableCellRenderer(350));
                     jTable.getColumnModel().getColumn(1).setCellRenderer(new CustomTableCellRenderer(20,SwingConstants.CENTER));
                     jTable.getColumnModel().getColumn(2).setCellRenderer(new CustomTableCellRenderer(50,SwingConstants.CENTER));
@@ -104,19 +107,20 @@ class TableContainer {
         int numCols;
         int numRows;
         private String[] columnNames = {
-            "PozycjaMagazynowa_ID",
+//            "PozycjaMagazynowa_ID",
             "Pozycja magazynowa",
             "Stan",
-            "Stan minimalny",
-            "Lokalizacja_ID",
+//            "Stan minimalny",
+//            "Lokalizacja_ID",
             "Lokalizacja",
-            "Numer systemowy SSA",
-            "Opis",
-            "Uwagi",
-            "Deleted",
-            "Data usuniecia",
-            "U\u017Cytkownik",
-            "Data modyfikacji"};
+//            "Numer systemowy SSA",
+//            "Opis",
+//            "Uwagi",
+//            "Deleted",
+//            "Data usuniecia",
+//            "U\u017Cytkownik",
+//            "Data modyfikacji"
+        };
 
         private final ResultSet rs;
         private ArrayList<Object> data = new ArrayList<>();
