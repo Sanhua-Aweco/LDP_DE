@@ -91,48 +91,12 @@ class TableContainer {
         }
     }
 
-    void showAdministracjaPozycjaMagazynowa(JTable jTable, JScrollPane jScrollPane) {
-        SQLServerConnection conn = connection.getConnectionFromPool();
-        try {
-            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynowe(?)}")) {
-                csmt.setInt(1, -1);
-                tableModelPozycjaMagazynowa = new TableModelPozycjaMagazynowa((SQLServerResultSet) csmt.executeQuery());
-                if (!(tableModelPozycjaMagazynowa.getRowCount() <= 0)) {
-                    jTable.setModel(tableModelPozycjaMagazynowa);
-                    sorterPozycjaMagazynowa = new TableRowSorter<>(tableModelPozycjaMagazynowa);
-                    DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) jTable.getTableHeader().getDefaultRenderer();
-                    List<TableRowSorter.SortKey> sortKeys = new ArrayList<>();
-                    sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-                    sorterPozycjaMagazynowa.setSortKeys(sortKeys);
-                    jTable.setRowSorter(sorterPozycjaMagazynowa);
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(4));
-                    jTable.removeColumn(jTable.getColumnModel().getColumn(0));
-                    jTable.getColumnModel().getColumn(0).setCellRenderer(new CustomTableCellRenderer(350));
-                    jTable.getColumnModel().getColumn(1).setCellRenderer(new CustomTableCellRenderer(80, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(2).setCellRenderer(new CustomTableCellRenderer(90, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(3).setCellRenderer(new CustomTableCellRenderer(100, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(4).setCellRenderer(new CustomTableCellRenderer(130, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(5).setCellRenderer(new CustomTableCellRenderer(200));
-                    jTable.getColumnModel().getColumn(6).setCellRenderer(new CustomTableCellRenderer(200));
-                    jTable.getColumnModel().getColumn(7).setCellRenderer(new CheckBoxRenderer(70));
-                    jTable.getColumnModel().getColumn(8).setCellRenderer(new CustomTableCellRenderer(120, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(9).setCellRenderer(new CustomTableCellRenderer(150, SwingConstants.CENTER));
-                    jTable.getColumnModel().getColumn(10).setCellRenderer(new CustomTableCellRenderer(120, SwingConstants.CENTER));
-                    jTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 10));
-                    renderer.setHorizontalAlignment(SwingConstants.CENTER);
-                    jTable.setRowSelectionInterval(0, 0);
-                    jScrollPane.setViewportView(jTable);
-                } else {
-                    jScrollPane.setViewportView(null);
-                    tableModelPozycjaMagazynowa.fireTableDataChanged();
-                }
-            } catch (SQLServerException | SQLTimeoutException ex) {
-                connection.returnConnectionToPool(conn);
-                LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
-            }
-        } finally {
-            connection.returnConnectionToPool(conn);
-        }
+    public TableModelPozycjaMagazynowa getTableModelPozycjaMagazynowa() {
+        return tableModelPozycjaMagazynowa;
+    }
+
+    public TableRowSorter<TableModelPozycjaMagazynowa> getSorterPozycjaMagazynowa() {
+        return sorterPozycjaMagazynowa;
     }
 
     class TableModelPozycjaMagazynowa extends AbstractTableModel {

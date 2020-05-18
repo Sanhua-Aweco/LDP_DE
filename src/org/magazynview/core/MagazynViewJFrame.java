@@ -15,9 +15,11 @@ import java.time.Year;
 import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -34,7 +36,6 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
     private static final DateFormat DATEFORMAT = new SimpleDateFormat("dd MMMMMMMMM yyyy");
     private static final DateFormat DATEFORMAT2 = new SimpleDateFormat("HH:mm:ss");
 
-
     private final TableContainer tableContainer;
     private ConnectionPoolManager connection = null;
 
@@ -44,7 +45,6 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
     private int jFrameMagazynHeight;
     private int jFrameMagazynWidth;
 
-   
     private int jDialogServerSettingsHeight;
     private int jDialogServerSettingsWidth;
 
@@ -81,6 +81,38 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         clock();
         magazynViewFrameShow();
         tableContainer.showPozycjaMagazynowa(jTablePozycjaMagazynowa, jScrollPanePozycjaMagazynowa);
+        jTextFieldFind.requestFocus();
+        jTextFieldFind.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jTextFieldFind.getText();
+
+                if (text.trim().length() == 0) {
+                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
+                } else {
+                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jTextFieldFind.getText();
+
+                if (text.trim().length() == 0) {
+                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
+                } else {
+                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+
     }
 
     private void magazynViewFrameShow() {
@@ -95,7 +127,6 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         setBounds((screenSize.width - jFrameMagazynWidth) / 2, (screenSize.height - jFrameMagazynHeight) / 2, jFrameMagazynWidth, jFrameMagazynHeight);
         MagazynViewJFrame.this.setTitle("Magazyn Mini v " + node.get("Setings.version", null));
     }
-
 
     public final void clock() {
         Timer timer = new Timer(1000, new MagazynViewJFrame.ClockListener());
@@ -157,6 +188,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         jLabelUser = new javax.swing.JLabel();
         jLabelData = new javax.swing.JLabel();
         jLabelCzas = new javax.swing.JLabel();
+        jTextFieldFind = new javax.swing.JTextField();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuControl = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
@@ -398,6 +430,11 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         jLabelCzas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelCzas.setText("Pokaz czas");
 
+        jTextFieldFind.setBackground(new java.awt.Color(240, 240, 240));
+        jTextFieldFind.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jTextFieldFind.setToolTipText("");
+        jTextFieldFind.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Wprowad\u017A s\u0142owo kt\u00F3rego szukasz :", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -409,24 +446,27 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                         .addComponent(jLabelStopka, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelCzas, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPanePozycjaMagazynowa, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE))
+                    .addComponent(jScrollPanePozycjaMagazynowa)
+                    .addComponent(jTextFieldFind))
                 .addContainerGap())
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPanePozycjaMagazynowa, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                .addComponent(jScrollPanePozycjaMagazynowa, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldFind, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelStopka, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelStopka, javax.swing.GroupLayout.DEFAULT_SIZE, 14, Short.MAX_VALUE)
                     .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -622,6 +662,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTablePozycjaMagazynowa;
     private javax.swing.JTextField jTextFieldDatabaseName;
+    private javax.swing.JTextField jTextFieldFind;
     private javax.swing.JTextField jTextFieldInstance;
     private javax.swing.JTextField jTextFieldServer;
     private javax.swing.JTextField jTextFieldUserName;
