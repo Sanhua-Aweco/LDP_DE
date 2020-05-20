@@ -125,7 +125,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
             jFrameMagazynHeight = 500;
         }
         setBounds((screenSize.width - jFrameMagazynWidth) / 2, (screenSize.height - jFrameMagazynHeight) / 2, jFrameMagazynWidth, jFrameMagazynHeight);
-        MagazynViewJFrame.this.setTitle("Magazyn Mini v " + node.get("Setings.version", null));
+        MagazynViewJFrame.this.setTitle("Magazyn View v " + node.get("Setings.version", null));
     }
 
     public final void clock() {
