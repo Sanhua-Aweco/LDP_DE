@@ -33,7 +33,7 @@ class ConnectionPoolManager {
     }
 
     private synchronized boolean checkIfConnectionPoolIsFull() {
-        final int MAX_POOL_SIZE = 50;
+        final int MAX_POOL_SIZE = 10;
         return getConnectionPool().size() >= MAX_POOL_SIZE;
     }
 
