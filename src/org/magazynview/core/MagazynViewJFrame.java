@@ -433,7 +433,7 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         jTextFieldFind.setBackground(new java.awt.Color(240, 240, 240));
         jTextFieldFind.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jTextFieldFind.setToolTipText("");
-        jTextFieldFind.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Wprowad\u017A s\u0142owo kt\u00F3rego szukasz", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        jTextFieldFind.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Wprowad\u017A s\u0142owo filtruj\u0105ce", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
