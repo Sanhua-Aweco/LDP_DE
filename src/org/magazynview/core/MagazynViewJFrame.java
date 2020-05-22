@@ -87,22 +87,24 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 String text = jTextFieldFind.getText();
-
-                if (text.trim().length() == 0) {
-                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
-                } else {
-                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                if (tableContainer.getTableModelPozycjaMagazynowa().getRowCount() > 0) {
+                    if (text.trim().length() == 0) {
+                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
+                    } else {
+                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                    }
                 }
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 String text = jTextFieldFind.getText();
-
-                if (text.trim().length() == 0) {
-                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
-                } else {
-                    tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                if (tableContainer.getTableModelPozycjaMagazynowa().getRowCount() > 0) {
+                    if (text.trim().length() == 0) {
+                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
+                    } else {
+                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                    }
                 }
             }
 
