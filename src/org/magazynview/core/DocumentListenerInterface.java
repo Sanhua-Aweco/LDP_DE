@@ -11,9 +11,8 @@ import javax.swing.event.DocumentListener;
 /**
  *
  * @author User
- * @param <TableContainer>
  */
-public interface DocumentListenerInterface <TableContainer> extends DocumentListener {
+public interface DocumentListenerInterface extends DocumentListener {
     void update(DocumentEvent e);
 
     @Override
