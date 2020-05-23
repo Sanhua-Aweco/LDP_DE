@@ -82,10 +82,9 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
         magazynViewFrameShow();
         tableContainer.showPozycjaMagazynowa(jTablePozycjaMagazynowa, jScrollPanePozycjaMagazynowa);
         jTextFieldFind.requestFocus();
-        jTextFieldFind.getDocument().addDocumentListener(new DocumentListener() {
-
+        jTextFieldFind.getDocument().addDocumentListener(new DocumentListenerInterface() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void update(DocumentEvent e) {
                 String text = jTextFieldFind.getText();
                 if (tableContainer.getTableModelPozycjaMagazynowa().getRowCount() > 0) {
                     if (text.trim().length() == 0) {
@@ -94,23 +93,6 @@ public class MagazynViewJFrame extends javax.swing.JFrame {
                         tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
                     }
                 }
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                String text = jTextFieldFind.getText();
-                if (tableContainer.getTableModelPozycjaMagazynowa().getRowCount() > 0) {
-                    if (text.trim().length() == 0) {
-                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(null);
-                    } else {
-                        tableContainer.getSorterPozycjaMagazynowa().setRowFilter(RowFilter.regexFilter("(?i)" + text));
-                    }
-                }
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent de) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
         });
