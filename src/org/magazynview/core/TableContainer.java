@@ -49,9 +49,7 @@ class TableContainer {
     public void showPozycjaMagazynowa(JTable jTable, JScrollPane jScrollPane) {
         SQLServerConnection conn = connection.getConnectionFromPool();
         try {
-//            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynowe(?)}")) {
             try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_pozycjeMagazynoweView()}")) {
-//                csmt.setInt(1, 0);
                 tableModelPozycjaMagazynowa = new TableModelPozycjaMagazynowa((SQLServerResultSet) csmt.executeQuery());
                 if (!(tableModelPozycjaMagazynowa.getRowCount() <= 0)) {
                     jTable.setModel(tableModelPozycjaMagazynowa);
