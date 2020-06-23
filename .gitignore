@@ -24,3 +24,6 @@ hs_err_pid*
 /nbproject/private/
 /build/
 /dist/
+/TestConnection/nbproject/private/
+/TestConnection/build/
+/TestConnection/dist/
