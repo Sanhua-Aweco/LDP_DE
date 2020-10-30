@@ -326,6 +326,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         jMenuItemCls.setBackground(new java.awt.Color(236, 233, 216));
         jMenuItemCls.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jMenuItemCls.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ldp_de/resources/edit-clear.png"))); // NOI18N
         jMenuItemCls.setText("Clear");
         jMenuItemCls.setIconTextGap(0);
         jMenuItemCls.addActionListener(new java.awt.event.ActionListener() {
@@ -742,7 +743,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         jScrollPaneTest.setViewportView(jPanelTest);
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/ldp_de/resources/ico.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/ldp_de/resources/ac-adapter.png")));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);

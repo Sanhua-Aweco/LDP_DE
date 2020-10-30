@@ -15,7 +15,7 @@ class TraySystem extends JFrame {
 
     static final long serialVersionUID = 6L;
     final PopupMenu popup = new PopupMenu();
-    final TrayIcon trayIcon = new TrayIcon(createImage("/org/ldp_de/resources/ico.png", "tray icon"));
+    final TrayIcon trayIcon = new TrayIcon(createImage("/org/ldp_de/resources/ac-adapter.png", "tray icon"));
     final SystemTray tray = SystemTray.getSystemTray();
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
     Preferences root = Preferences.userRoot();
