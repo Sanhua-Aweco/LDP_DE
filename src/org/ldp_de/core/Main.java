@@ -12,6 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author aleksander.lipiec
  */
+@SuppressWarnings("ClassWithMultipleLoggers")
 public class Main {
 
 

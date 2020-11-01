@@ -13,7 +13,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.print.PrinterJob;
 import java.io.OutputStream;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -51,7 +50,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private final String UserName = node.get("Connection.userName", null);
     private final String Password = node.get("Connection.password", null);
     private final String user = (System.getProperty("user.name"));
-    private String namePrinterDoc = node.get("Setings.namePrinterDoc", null);
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
     private static final Logger LOGGER_INF = Logger.getLogger("LOG_INF.log");
     private final Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -71,28 +69,27 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
     private static final ExecutorService EXECUTOR_RS232 = Executors.newSingleThreadExecutor();
     private String[] analogInput7018P;
-    
 
     /**
      * Creates new form Rs232_v1JFrame
      */
     public LDP_DE_JFrame() {
-        
-        try {
-            SQLServerConnection conn = (SQLServerConnection) DriverManager.getConnection(databaseUrl, UserName, Password);
-            conn.close();
-            connection = new ConnectionPoolManager(databaseUrl, UserName, Password);
-        } catch (SQLException ex) {
-            node.put("Connection.databaseUrl", "");
-            node.put("Connection.userName", "");
-            node.put("Connection.password", "");
-            multiLineMsg = new String[]{"Brak po\u0142\u0105czenia z baz\u0105 danych.", ex.getLocalizedMessage(), "Sprawd\u017A ustawienia komunikacji z serwerem."};
-            komunikat(multiLineMsg, "Panel informacyjny", JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION);
-            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
-        }
-        
+
+//        try {
+//            SQLServerConnection conn = (SQLServerConnection) DriverManager.getConnection(databaseUrl, UserName, Password);
+//            conn.close();
+//            connection = new ConnectionPoolManager(databaseUrl, UserName, Password);
+//        } catch (SQLException ex) {
+//            node.put("Connection.databaseUrl", "");
+//            node.put("Connection.userName", "");
+//            node.put("Connection.password", "");
+////            multiLineMsg = new String[]{"Brak po\u0142\u0105czenia z baz\u0105 danych.", ex.getLocalizedMessage(), "Sprawd\u017A ustawienia komunikacji z serwerem."};
+////            komunikat(multiLineMsg, "Panel informacyjny", JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION);
+//            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
+//        }
+
         initComponents();
-        
+
         EventQueue.invokeLater(() -> {
             LogFormatter logFormatter = new LogFormatter();
 
@@ -119,6 +116,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         clock();
         EXECUTOR_RS232.execute(new DataIOServer(jTextField1, jTextField2, jTextField3, jTextField4, jTextField5, jTextField6, jTextField7, jTextField8));
         ldp_De_FrameShow();
+
     }
 
     private void ldp_De_FrameShow() {
@@ -743,6 +741,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         jScrollPaneTest.setViewportView(jPanelTest);
 
+        setAlwaysOnTop(true);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/ldp_de/resources/ac-adapter.png")));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
