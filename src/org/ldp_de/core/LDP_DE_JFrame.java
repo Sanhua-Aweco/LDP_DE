@@ -310,6 +310,9 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelData = new javax.swing.JLabel();
         jLabelCzas = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        chartBean1 = new org.chartBean.core.ChartBean();
+        chartBean2 = new org.chartBean.core.ChartBean();
+        chartBean3 = new org.chartBean.core.ChartBean();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuControl = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
@@ -786,6 +789,10 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelCzas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelCzas.setText("Pokaz czas");
 
+        jTabbedPane1.addTab("tab1", chartBean1);
+        jTabbedPane1.addTab("tab2", chartBean2);
+        jTabbedPane1.addTab("tab3", chartBean3);
+
         jMenuBar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
         jMenuControl.setText("Control");
@@ -1029,6 +1036,9 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemDataBaseSettingsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.chartBean.core.ChartBean chartBean1;
+    private org.chartBean.core.ChartBean chartBean2;
+    private org.chartBean.core.ChartBean chartBean3;
     private javax.swing.JButton jButtonAnulujServerSettings;
     private javax.swing.JButton jButtonSaveModServerSettings;
     private javax.swing.JButton jButtonSettingsCancel;
