@@ -6,8 +6,13 @@
 package org.ldp_de.core;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -21,7 +26,10 @@ import org.chartBean.core.ChartBean;
 public class StacjaTestowa implements Runnable {
 
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
-    private byte[] pureData;
+    private byte[] pureData_7018P;
+    private byte[] pureData_7017;
+    private byte[] pureData_7067D;
+    private byte[] pureData_ION6200;
     private final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
     private final String[] array_7018P_Check = {"24", "32", "31", "4D", "0D"};
     private final String[] array_7018P_Read = {"23", "32", "31", "0D"};
@@ -32,7 +40,7 @@ public class StacjaTestowa implements Runnable {
     private final String[] array_7067D_Read = {"40", "32", "30", "0D"};
     private byte[] convertedData;
     private final byte[] readBuffer = new byte[1024];
-    int numRead;
+    private int numRead;
     private byte[] bytes_7018P_Check;
     private byte[] bytes_7018P_Read;
     private byte[] bytes_7017_Check;
@@ -50,7 +58,12 @@ public class StacjaTestowa implements Runnable {
     private final JButton jButtonStep_4;
     private final ChartBean chartBeanTemperatura;
     private final JLabel jLabelNumerCyklu;
-    private boolean start;
+    private boolean startStat;
+    private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+    private final SqlQueryContainer sqlQueryContainer;
+    private SekwencjaTestowa sekwencjaTestowa;
+    private int testID;
 
     @SuppressWarnings("NonPublicExported")
 
@@ -65,8 +78,9 @@ public class StacjaTestowa implements Runnable {
         this.jButtonStep_4 = jButtonStep_4;
         this.chartBeanTemperatura = chartBeanTemperatura;
         this.jLabelNumerCyklu = jLabelNumerCyklu;
+        sqlQueryContainer = new SqlQueryContainer(connection);
         initComunication();
-        start = true;
+        startStat = true;
         jButtonStart.setEnabled(false);
         jButtonStop.setEnabled(true);
     }
@@ -91,32 +105,37 @@ public class StacjaTestowa implements Runnable {
     @Override
     public void run() {
         chartBeanTemperatura.setClear();
-        SerialPort comPort = SerialPort.getCommPort(portNameTester);
         try {
+            SerialPort comPort = SerialPort.getCommPort(portNameTester);
             comPort.openPort();
             comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 0);
 
             comPort.writeBytes(bytes_7018P_Check, bytes_7018P_Check.length);
             numRead = comPort.readBytes(readBuffer, readBuffer.length);
-            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+            pureData_7018P = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
             comPort.writeBytes(bytes_7017_Check, bytes_7017_Check.length);
             numRead = comPort.readBytes(readBuffer, readBuffer.length);
-            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+            pureData_7017 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
             comPort.writeBytes(bytes_7067D_Check, bytes_7067D_Check.length);
             numRead = comPort.readBytes(readBuffer, readBuffer.length);
-            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+            pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
             comPort.writeBytes(bytes_7067D_ResetWTD, bytes_7067D_ResetWTD.length);
             numRead = comPort.readBytes(readBuffer, readBuffer.length);
-            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-            
-            while (start) {
+            pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
+            testID = sqlQueryContainer.setNewTest(DATEFORMAT.format(System.currentTimeMillis()));
+
+            sekwencjaTestowa = new SekwencjaTestowa(this,connection, testID, pureData_7018P, pureData_7017, pureData_7067D,pureData_ION6200, jButtonStep_1, jButtonStep_2, jButtonStep_3, jButtonStep_4, jLabelNumerCyklu);
+            EXECUTOR.execute(sekwencjaTestowa);
+
+            while (startStat) {
                 comPort.writeBytes(bytes_7018P_Read, bytes_7018P_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-                convertedData = hexStringToByteArray(bytesToHex(pureData));
+                pureData_7018P = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                convertedData = hexStringToByteArray(bytesToHex(pureData_7018P));
                 chartBeanTemperatura.setValue_0(stringToDouble(analogValue(convertedData, 0)));
                 chartBeanTemperatura.setValue_1(stringToDouble(analogValue(convertedData, 1)));
                 chartBeanTemperatura.setValue_2(stringToDouble(analogValue(convertedData, 2)));
@@ -128,32 +147,35 @@ public class StacjaTestowa implements Runnable {
 
                 comPort.writeBytes(bytes_7017_Read, bytes_7017_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                pureData_7017 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
                 comPort.writeBytes(bytes_7067D_Read, bytes_7067D_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
             }
+
+        } catch (SerialPortInvalidPortException ex) {
+            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
         } catch (Exception ex) {
             LOGGER_ERR.log(Level.SEVERE, " Com port error {0}", ex.getMessage());
         }
-        comPort.closePort();
-        System.out.println("STOOOP");
+
         jButtonStop.setEnabled(false);
         jButtonStart.setEnabled(true);
     }
 
     public void stop() {
-        start = false;
+        startStat = false;
     }
 
     private String analogValue(byte[] bytes, int channel) {
         int lenghtBytes = bytes.length;
         int channelCount = 8;
         int dataLenght = lenghtBytes / channelCount;
-        int start = dataLenght * channel;
-        int end = start + dataLenght;
-        byte[] bytesFragment = Arrays.copyOfRange(bytes, start, end);
+        int startData = dataLenght * channel;
+        int end = startData + dataLenght;
+        byte[] bytesFragment = Arrays.copyOfRange(bytes, startData, end);
         byte[] bytesConverted = hexStringToByteArray(bytesToHex(bytesFragment));
         return new String(bytesConverted, StandardCharsets.UTF_8);
     }

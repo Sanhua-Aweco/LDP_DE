@@ -71,7 +71,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private int jDialogServerSettingsHeight;
     private int jDialogServerSettingsWidth;
 
-    private static final ExecutorService EXECUTOR_STACJA_TESTOWA = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
     private StacjaTestowa stacjaTestowa_1;
     private String[] portList;
     private String portNameTester_1;
@@ -1487,7 +1487,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private void jButtonTest1StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1StartActionPerformed
         portNameTester_1 = node.get("Setings.portNameTester_1", null);
         stacjaTestowa_1 = new StacjaTestowa(connection, portNameTester_1, jButtonTest1Start, jButtonTest1Stop, jButtonTest1Step_1, jButtonTest1Step_2, jButtonTest1Step_3, jButtonTest1Step_4, chartBeanTest1Temperatura, jLabelTest1NumerCyklu);
-        EXECUTOR_STACJA_TESTOWA.execute(stacjaTestowa_1);
+        EXECUTOR.execute(stacjaTestowa_1);
     }//GEN-LAST:event_jButtonTest1StartActionPerformed
 
     private void jButtonTest1Step_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1Step_2ActionPerformed
