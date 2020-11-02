@@ -8,6 +8,8 @@ package org.ldp_de.core;
 import com.fazecast.jSerialComm.SerialPort;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 
 /**
@@ -16,6 +18,7 @@ import javax.swing.JTextField;
  */
 public class DataIOServer implements Runnable {
 
+    private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
     private byte[] pureData;
     private final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
     private final String[] array_7018P_Check = {"24", "32", "31", "4D", "0D"};
@@ -54,45 +57,45 @@ public class DataIOServer implements Runnable {
         this.jTextField7 = jTextField7;
         this.jTextField8 = jTextField8;
         bytes_7018P_Check = new byte[array_7018P_Check.length];
-        fillBytes(array_7018P_Check,bytes_7018P_Check);
+        fillBytes(array_7018P_Check, bytes_7018P_Check);
         bytes_7018P_Read = new byte[array_7018P_Read.length];
-        fillBytes(array_7018P_Read,bytes_7018P_Read);
+        fillBytes(array_7018P_Read, bytes_7018P_Read);
         bytes_7017_Check = new byte[array_7017_Check.length];
-        fillBytes(array_7017_Check,bytes_7017_Check);
+        fillBytes(array_7017_Check, bytes_7017_Check);
         bytes_7017_Read = new byte[array_7017_Read.length];
-        fillBytes(array_7017_Read,bytes_7017_Read);
+        fillBytes(array_7017_Read, bytes_7017_Read);
         bytes_7067D_Check = new byte[array_7067D_Check.length];
-        fillBytes(array_7067D_Check,bytes_7067D_Check);
+        fillBytes(array_7067D_Check, bytes_7067D_Check);
         bytes_7067D_ResetWTD = new byte[array_7067D_ResetWTD.length];
-        fillBytes(array_7067D_ResetWTD,bytes_7067D_ResetWTD);
+        fillBytes(array_7067D_ResetWTD, bytes_7067D_ResetWTD);
         bytes_7067D_Read = new byte[array_7067D_Read.length];
-        fillBytes(array_7067D_Read,bytes_7067D_Read);
+        fillBytes(array_7067D_Read, bytes_7067D_Read);
 
     }
 
     @Override
     public void run() {
         SerialPort comPort = SerialPort.getCommPorts()[1];
-        comPort.openPort();
-        comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 0);
-        
-        comPort.writeBytes(bytes_7018P_Check, bytes_7018P_Check.length);
-        numRead = comPort.readBytes(readBuffer, readBuffer.length);
-        pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-
-        comPort.writeBytes(bytes_7017_Check, bytes_7017_Check.length);
-        numRead = comPort.readBytes(readBuffer, readBuffer.length);
-        pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-        
-        comPort.writeBytes(bytes_7067D_Check, bytes_7067D_Check.length);
-        numRead = comPort.readBytes(readBuffer, readBuffer.length);
-        pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-        
-        comPort.writeBytes(bytes_7067D_ResetWTD, bytes_7067D_ResetWTD.length);
-        numRead = comPort.readBytes(readBuffer, readBuffer.length);
-        pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-        
         try {
+            comPort.openPort();
+            comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 0);
+
+            comPort.writeBytes(bytes_7018P_Check, bytes_7018P_Check.length);
+            numRead = comPort.readBytes(readBuffer, readBuffer.length);
+            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
+            comPort.writeBytes(bytes_7017_Check, bytes_7017_Check.length);
+            numRead = comPort.readBytes(readBuffer, readBuffer.length);
+            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
+            comPort.writeBytes(bytes_7067D_Check, bytes_7067D_Check.length);
+            numRead = comPort.readBytes(readBuffer, readBuffer.length);
+            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
+            comPort.writeBytes(bytes_7067D_ResetWTD, bytes_7067D_ResetWTD.length);
+            numRead = comPort.readBytes(readBuffer, readBuffer.length);
+            pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
             while (true) {
                 comPort.writeBytes(bytes_7018P_Read, bytes_7018P_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
@@ -106,17 +109,17 @@ public class DataIOServer implements Runnable {
                 jTextField6.setText(analogValue(convertedData, 5));
                 jTextField7.setText(analogValue(convertedData, 6));
                 jTextField8.setText(analogValue(convertedData, 7));
-                
+
                 comPort.writeBytes(bytes_7017_Read, bytes_7017_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
                 pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-                
+
                 comPort.writeBytes(bytes_7067D_Read, bytes_7067D_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
                 pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            LOGGER_ERR.log(Level.SEVERE, " Com port error {0}", ex.getMessage());
         }
         comPort.closePort();
     }
@@ -152,7 +155,7 @@ public class DataIOServer implements Runnable {
         return data;
     }
 
-    private byte[] fillBytes(String[] stringArray,byte[] bytes) {
+    private byte[] fillBytes(String[] stringArray, byte[] bytes) {
         for (int i = 0; i < stringArray.length; i++) {
             bytes[i] = (byte) Integer.parseInt(stringArray[i], 16);
         }

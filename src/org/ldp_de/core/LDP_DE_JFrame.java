@@ -13,7 +13,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -62,8 +65,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private int jFrame_LDP_DE_Height;
     private int jFrame_LDP_DE_Width;
 
-    private int jDialogDocSettingsWidth;
-    private int jDialogDocSettingsHeight;
+    private int jDialogSettingsWidth;
+    private int jDialogSettingsHeight;
     private int jDialogServerSettingsHeight;
     private int jDialogServerSettingsWidth;
 
@@ -75,18 +78,18 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
      */
     public LDP_DE_JFrame() {
 
-//        try {
-//            SQLServerConnection conn = (SQLServerConnection) DriverManager.getConnection(databaseUrl, UserName, Password);
-//            conn.close();
-//            connection = new ConnectionPoolManager(databaseUrl, UserName, Password);
-//        } catch (SQLException ex) {
-//            node.put("Connection.databaseUrl", "");
-//            node.put("Connection.userName", "");
-//            node.put("Connection.password", "");
-////            multiLineMsg = new String[]{"Brak po\u0142\u0105czenia z baz\u0105 danych.", ex.getLocalizedMessage(), "Sprawd\u017A ustawienia komunikacji z serwerem."};
-////            komunikat(multiLineMsg, "Panel informacyjny", JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION);
-//            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
-//        }
+        try {
+            SQLServerConnection conn = (SQLServerConnection) DriverManager.getConnection(databaseUrl, UserName, Password);
+            conn.close();
+            connection = new ConnectionPoolManager(databaseUrl, UserName, Password);
+        } catch (SQLException ex) {
+            node.put("Connection.databaseUrl", "");
+            node.put("Connection.userName", "");
+            node.put("Connection.password", "");
+            multiLineMsg = new String[]{"Brak po\u0142\u0105czenia z baz\u0105 danych.", ex.getLocalizedMessage(), "Sprawd\u017A ustawienia komunikacji z serwerem."};
+            komunikat(multiLineMsg, "Panel informacyjny", JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION);
+            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
+        }
 
         initComponents();
 
@@ -310,9 +313,57 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelData = new javax.swing.JLabel();
         jLabelCzas = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        chartBean1 = new org.chartBean.core.ChartBean();
-        chartBean2 = new org.chartBean.core.ChartBean();
-        chartBean3 = new org.chartBean.core.ChartBean();
+        jPanelTest1 = new javax.swing.JPanel();
+        jTextField9 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField10 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField11 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField12 = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField13 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField14 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jTextField15 = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jTextField16 = new javax.swing.JTextField();
+        jPanelTest2 = new javax.swing.JPanel();
+        jTextField17 = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jTextField18 = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        jTextField19 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        jTextField20 = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jTextField21 = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jTextField22 = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
+        jTextField23 = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        jTextField24 = new javax.swing.JTextField();
+        jPanelTest3 = new javax.swing.JPanel();
+        jTextField25 = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        jTextField26 = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        jTextField27 = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        jTextField28 = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        jTextField29 = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jTextField30 = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jTextField31 = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        jTextField32 = new javax.swing.JTextField();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuControl = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
@@ -365,8 +416,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
             jPanelReportServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReportServerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextAreaReportServer, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTextAreaReportServer, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelReportServerLayout.setVerticalGroup(
             jPanelReportServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -397,25 +448,25 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jPanelSettingsLayout.setHorizontalGroup(
             jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSettingsLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jCheckBoxDetailWindow)
-                .addGap(41, 41, 41))
+                .addContainerGap()
+                .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jPanelReportServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelSettingsLayout.createSequentialGroup()
+                        .addComponent(jButtonSettingsCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSettingsSaveMod)))
+                .addContainerGap())
             .addGroup(jPanelSettingsLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addGroup(jPanelSettingsLayout.createSequentialGroup()
-                        .addComponent(jButtonSettingsCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSettingsSaveMod))
-                    .addComponent(jPanelReportServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jCheckBoxDetailWindow)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSettingsLayout.setVerticalGroup(
             jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSettingsLayout.createSequentialGroup()
-                .addGap(94, 94, 94)
+                .addContainerGap()
                 .addComponent(jPanelReportServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(226, 226, 226)
+                .addGap(18, 18, 18)
                 .addComponent(jCheckBoxDetailWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -744,7 +795,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         jScrollPaneTest.setViewportView(jPanelTest);
 
-        setAlwaysOnTop(true);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/org/ldp_de/resources/ac-adapter.png")));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -789,9 +839,344 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelCzas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelCzas.setText("Pokaz czas");
 
-        jTabbedPane1.addTab("tab1", chartBean1);
-        jTabbedPane1.addTab("tab2", chartBean2);
-        jTabbedPane1.addTab("tab3", chartBean3);
+        jTextField9.setEditable(false);
+
+        jLabel9.setText("Analog Value CHANNEL 0");
+
+        jTextField10.setEditable(false);
+
+        jLabel10.setText("Analog Value CHANNEL 1");
+
+        jTextField11.setEditable(false);
+
+        jLabel11.setText("Analog Value CHANNEL 2");
+
+        jTextField12.setEditable(false);
+
+        jLabel12.setText("Analog Value CHANNEL 3");
+
+        jTextField13.setEditable(false);
+
+        jLabel13.setText("Analog Value CHANNEL 4");
+
+        jLabel14.setText("Analog Value CHANNEL 5");
+
+        jTextField14.setEditable(false);
+
+        jLabel15.setText("Analog Value CHANNEL 6");
+
+        jTextField15.setEditable(false);
+
+        jLabel16.setText("Analog Value CHANNEL 7");
+
+        jTextField16.setEditable(false);
+
+        javax.swing.GroupLayout jPanelTest1Layout = new javax.swing.GroupLayout(jPanelTest1);
+        jPanelTest1.setLayout(jPanelTest1Layout);
+        jPanelTest1Layout.setHorizontalGroup(
+            jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField16))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField15))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField14))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField13))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField12))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField11))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField10))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(779, Short.MAX_VALUE))
+        );
+        jPanelTest1Layout.setVerticalGroup(
+            jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
+                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel14)
+                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(164, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Stanowisko testowe nr 1", jPanelTest1);
+
+        jTextField17.setEditable(false);
+
+        jLabel17.setText("Analog Value CHANNEL 0");
+
+        jTextField18.setEditable(false);
+
+        jLabel18.setText("Analog Value CHANNEL 1");
+
+        jTextField19.setEditable(false);
+
+        jLabel19.setText("Analog Value CHANNEL 2");
+
+        jTextField20.setEditable(false);
+
+        jLabel20.setText("Analog Value CHANNEL 3");
+
+        jTextField21.setEditable(false);
+
+        jLabel21.setText("Analog Value CHANNEL 4");
+
+        jLabel22.setText("Analog Value CHANNEL 5");
+
+        jTextField22.setEditable(false);
+
+        jLabel23.setText("Analog Value CHANNEL 6");
+
+        jTextField23.setEditable(false);
+
+        jLabel24.setText("Analog Value CHANNEL 7");
+
+        jTextField24.setEditable(false);
+
+        javax.swing.GroupLayout jPanelTest2Layout = new javax.swing.GroupLayout(jPanelTest2);
+        jPanelTest2.setLayout(jPanelTest2Layout);
+        jPanelTest2Layout.setHorizontalGroup(
+            jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField24))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField23))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel22)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField22))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField21))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel20)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField20))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel19)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField19))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField18))
+                    .addGroup(jPanelTest2Layout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(779, Short.MAX_VALUE))
+        );
+        jPanelTest2Layout.setVerticalGroup(
+            jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel17)
+                    .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel20)
+                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel21)
+                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel22)
+                    .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel23)
+                    .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel24)
+                    .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(164, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Stanowisko testowe nr 2", jPanelTest2);
+
+        jTextField25.setEditable(false);
+
+        jLabel25.setText("Analog Value CHANNEL 0");
+
+        jTextField26.setEditable(false);
+
+        jLabel26.setText("Analog Value CHANNEL 1");
+
+        jTextField27.setEditable(false);
+
+        jLabel27.setText("Analog Value CHANNEL 2");
+
+        jTextField28.setEditable(false);
+
+        jLabel28.setText("Analog Value CHANNEL 3");
+
+        jTextField29.setEditable(false);
+
+        jLabel29.setText("Analog Value CHANNEL 4");
+
+        jLabel30.setText("Analog Value CHANNEL 5");
+
+        jTextField30.setEditable(false);
+
+        jLabel31.setText("Analog Value CHANNEL 6");
+
+        jTextField31.setEditable(false);
+
+        jLabel32.setText("Analog Value CHANNEL 7");
+
+        jTextField32.setEditable(false);
+
+        javax.swing.GroupLayout jPanelTest3Layout = new javax.swing.GroupLayout(jPanelTest3);
+        jPanelTest3.setLayout(jPanelTest3Layout);
+        jPanelTest3Layout.setHorizontalGroup(
+            jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel32)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField32))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel31)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField31))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField30))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField29))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel28)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField28))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel27)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField27))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel26)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField26))
+                    .addGroup(jPanelTest3Layout.createSequentialGroup()
+                        .addComponent(jLabel25)
+                        .addGap(50, 50, 50)
+                        .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(779, Short.MAX_VALUE))
+        );
+        jPanelTest3Layout.setVerticalGroup(
+            jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTest3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel25)
+                    .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel26)
+                    .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel27)
+                    .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel28)
+                    .addComponent(jTextField28, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel29)
+                    .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel30)
+                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel31)
+                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel32)
+                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(164, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Stanowisko testowe nr 3", jPanelTest3);
 
         jMenuBar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
@@ -864,7 +1249,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelStopka, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                        .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -876,7 +1261,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPaneKomunikatySystemowe, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -899,11 +1284,30 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemExitActionPerformed
 
     private void jMenuItemRaportyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRaportyActionPerformed
-
+        try {
+            URI uri = new URI(node.get("Setings.reportServer", "http://"));
+            java.awt.Desktop.getDesktop().browse(uri);
+        } catch (IOException | URISyntaxException ex) {
+            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
+        }
     }//GEN-LAST:event_jMenuItemRaportyActionPerformed
 
     private void jMenuItemUstawieniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUstawieniaActionPerformed
+        jDialogSettingsWidth = node.getInt("Setings.jDialogSettingsWidth", 0);
+        jDialogSettingsHeight = node.getInt("Setings.jDialogSettingsHeight", 0);
+        if (jDialogSettingsWidth == 0) {
+            jDialogSettingsWidth = 450;
+        }
+        if (jDialogSettingsHeight == 0) {
+            jDialogSettingsHeight = 290;
+        }
+        jDialogSettings.setBounds((LDP_DE_JFrame.this.getLocation().x + (LDP_DE_JFrame.this.getWidth() / 2) - (jDialogSettingsWidth / 2)), LDP_DE_JFrame.this.getLocation().y, jDialogSettingsWidth, jDialogSettingsHeight);
+        jDialogSettings.setTitle("Stanowisko testowe LDP DE v " + node.get("Setings.version", null) + " - Settings");
 
+
+        jTextAreaReportServer.setText(node.get("Setings.reportServer", "http://"));
+        jCheckBoxDetailWindow.setSelected(node.getBoolean("Setings.detailWindowEnable", false));
+        jDialogSettings.setVisible(true);
     }//GEN-LAST:event_jMenuItemUstawieniaActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -1032,13 +1436,27 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jDialogServerSettingsWindowClosing
 
     private void jMenuItemDataBaseSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDataBaseSettingsActionPerformed
-        // TODO add your handling code here:
+        jDialogServerSettingsWidth = node.getInt("Setings.jDialogServerSettingsWidth", 0);
+        jDialogServerSettingsHeight = node.getInt("Setings.jDialogServerSettingsHeight", 0);
+        if (jDialogServerSettingsWidth == 0) {
+            jDialogServerSettingsWidth = 450;
+        }
+        if (jDialogServerSettingsHeight == 0) {
+            jDialogServerSettingsHeight = 290;
+        }
+        jDialogServerSettings.setBounds((LDP_DE_JFrame.this.getLocation().x + (LDP_DE_JFrame.this.getWidth() / 2) - (jDialogServerSettingsWidth / 2)), LDP_DE_JFrame.this.getLocation().y, jDialogServerSettingsWidth, jDialogServerSettingsHeight);
+        jDialogServerSettings.setTitle("Stanowisko testowe LDP DE v " + node.get("Setings.version", null) + " - Settings");
+
+        jTextFieldServer.setText(node.get("Connection.server", null));
+        jTextFieldInstance.setText(node.get("Connection.instance", null));
+        jTextFieldDatabaseName.setText(node.get("Connection.databaseName", null));
+        jTextFieldUserName.setText("");
+        jPasswordFieldPassword.setText("");
+        jDialogServerSettings.setVisible(true);
+
     }//GEN-LAST:event_jMenuItemDataBaseSettingsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.chartBean.core.ChartBean chartBean1;
-    private org.chartBean.core.ChartBean chartBean2;
-    private org.chartBean.core.ChartBean chartBean3;
     private javax.swing.JButton jButtonAnulujServerSettings;
     private javax.swing.JButton jButtonSaveModServerSettings;
     private javax.swing.JButton jButtonSettingsCancel;
@@ -1047,13 +1465,37 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JDialog jDialogServerSettings;
     private javax.swing.JDialog jDialogSettings;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCzas;
     private javax.swing.JLabel jLabelData;
     private javax.swing.JLabel jLabelDatabaseName;
@@ -1077,6 +1519,9 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelServerSettings;
     private javax.swing.JPanel jPanelSettings;
     private javax.swing.JPanel jPanelTest;
+    private javax.swing.JPanel jPanelTest1;
+    private javax.swing.JPanel jPanelTest2;
+    private javax.swing.JPanel jPanelTest3;
     private javax.swing.JPanel jPanelUserLogin;
     private javax.swing.JPasswordField jPasswordFieldPassword;
     private javax.swing.JPopupMenu jPopupMenuKomunikatySystemowe;
@@ -1086,13 +1531,37 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextAreaReportServer;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField11;
+    private javax.swing.JTextField jTextField12;
+    private javax.swing.JTextField jTextField13;
+    private javax.swing.JTextField jTextField14;
+    private javax.swing.JTextField jTextField15;
+    private javax.swing.JTextField jTextField16;
+    private javax.swing.JTextField jTextField17;
+    private javax.swing.JTextField jTextField18;
+    private javax.swing.JTextField jTextField19;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField20;
+    private javax.swing.JTextField jTextField21;
+    private javax.swing.JTextField jTextField22;
+    private javax.swing.JTextField jTextField23;
+    private javax.swing.JTextField jTextField24;
+    private javax.swing.JTextField jTextField25;
+    private javax.swing.JTextField jTextField26;
+    private javax.swing.JTextField jTextField27;
+    private javax.swing.JTextField jTextField28;
+    private javax.swing.JTextField jTextField29;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField30;
+    private javax.swing.JTextField jTextField31;
+    private javax.swing.JTextField jTextField32;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
     private javax.swing.JTextField jTextFieldDatabaseName;
     private javax.swing.JTextField jTextFieldInstance;
     private javax.swing.JTextField jTextFieldServer;
