@@ -10,13 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import org.chartBean.core.ChartBean;
 
 /**
  *
  * @author aleksander.lipiec
  */
-public class DataIOServer implements Runnable {
+public class StacjaTestowa implements Runnable {
 
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
     private byte[] pureData;
@@ -31,31 +33,45 @@ public class DataIOServer implements Runnable {
     private byte[] convertedData;
     private final byte[] readBuffer = new byte[1024];
     int numRead;
-    private final JTextField jTextField1;
-    private final JTextField jTextField2;
-    private final JTextField jTextField3;
-    private final JTextField jTextField4;
-    private final JTextField jTextField5;
-    private final JTextField jTextField6;
-    private final JTextField jTextField7;
-    private final JTextField jTextField8;
-    private final byte[] bytes_7018P_Check;
-    private final byte[] bytes_7018P_Read;
-    private final byte[] bytes_7017_Check;
-    private final byte[] bytes_7017_Read;
-    private final byte[] bytes_7067D_Check;
-    private final byte[] bytes_7067D_ResetWTD;
-    private final byte[] bytes_7067D_Read;
+    private byte[] bytes_7018P_Check;
+    private byte[] bytes_7018P_Read;
+    private byte[] bytes_7017_Check;
+    private byte[] bytes_7017_Read;
+    private byte[] bytes_7067D_Check;
+    private byte[] bytes_7067D_ResetWTD;
+    private byte[] bytes_7067D_Read;
+    private final ConnectionPoolManager connection;
+    private final String portNameTester;
+    private final JButton jButtonStart;
+    private final JButton jButtonStop;
+    private final JButton jButtonStep_1;
+    private final JButton jButtonStep_2;
+    private final JButton jButtonStep_3;
+    private final JButton jButtonStep_4;
+    private final ChartBean chartBeanTemperatura;
+    private final JLabel jLabelNumerCyklu;
+    private boolean start;
 
-    public DataIOServer(JTextField jTextField1, JTextField jTextField2, JTextField jTextField3, JTextField jTextField4, JTextField jTextField5, JTextField jTextField6, JTextField jTextField7, JTextField jTextField8) {
-        this.jTextField1 = jTextField1;
-        this.jTextField2 = jTextField2;
-        this.jTextField3 = jTextField3;
-        this.jTextField4 = jTextField4;
-        this.jTextField5 = jTextField5;
-        this.jTextField6 = jTextField6;
-        this.jTextField7 = jTextField7;
-        this.jTextField8 = jTextField8;
+    @SuppressWarnings("NonPublicExported")
+
+    public StacjaTestowa(ConnectionPoolManager connection, String portNameTester, JButton jButtonStart, JButton jButtonStop, JButton jButtonStep_1, JButton jButtonStep_2, JButton jButtonStep_3, JButton jButtonStep_4, ChartBean chartBeanTemperatura, JLabel jLabelNumerCyklu) {
+        this.connection = connection;
+        this.portNameTester = portNameTester;
+        this.jButtonStart = jButtonStart;
+        this.jButtonStop = jButtonStop;
+        this.jButtonStep_1 = jButtonStep_1;
+        this.jButtonStep_2 = jButtonStep_2;
+        this.jButtonStep_3 = jButtonStep_3;
+        this.jButtonStep_4 = jButtonStep_4;
+        this.chartBeanTemperatura = chartBeanTemperatura;
+        this.jLabelNumerCyklu = jLabelNumerCyklu;
+        initComunication();
+        start = true;
+        jButtonStart.setEnabled(false);
+        jButtonStop.setEnabled(true);
+    }
+
+    private void initComunication() {
         bytes_7018P_Check = new byte[array_7018P_Check.length];
         fillBytes(array_7018P_Check, bytes_7018P_Check);
         bytes_7018P_Read = new byte[array_7018P_Read.length];
@@ -70,12 +86,12 @@ public class DataIOServer implements Runnable {
         fillBytes(array_7067D_ResetWTD, bytes_7067D_ResetWTD);
         bytes_7067D_Read = new byte[array_7067D_Read.length];
         fillBytes(array_7067D_Read, bytes_7067D_Read);
-
     }
 
     @Override
     public void run() {
-        SerialPort comPort = SerialPort.getCommPorts()[1];
+        chartBeanTemperatura.setClear();
+        SerialPort comPort = SerialPort.getCommPort(portNameTester);
         try {
             comPort.openPort();
             comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 0);
@@ -95,20 +111,20 @@ public class DataIOServer implements Runnable {
             comPort.writeBytes(bytes_7067D_ResetWTD, bytes_7067D_ResetWTD.length);
             numRead = comPort.readBytes(readBuffer, readBuffer.length);
             pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
-
-            while (true) {
+            
+            while (start) {
                 comPort.writeBytes(bytes_7018P_Read, bytes_7018P_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
                 pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
                 convertedData = hexStringToByteArray(bytesToHex(pureData));
-                jTextField1.setText(analogValue(convertedData, 0));
-                jTextField2.setText(analogValue(convertedData, 1));
-                jTextField3.setText(analogValue(convertedData, 2));
-                jTextField4.setText(analogValue(convertedData, 3));
-                jTextField5.setText(analogValue(convertedData, 4));
-                jTextField6.setText(analogValue(convertedData, 5));
-                jTextField7.setText(analogValue(convertedData, 6));
-                jTextField8.setText(analogValue(convertedData, 7));
+                chartBeanTemperatura.setValue_0(stringToDouble(analogValue(convertedData, 0)));
+                chartBeanTemperatura.setValue_1(stringToDouble(analogValue(convertedData, 1)));
+                chartBeanTemperatura.setValue_2(stringToDouble(analogValue(convertedData, 2)));
+                chartBeanTemperatura.setValue_3(stringToDouble(analogValue(convertedData, 3)));
+                chartBeanTemperatura.setValue_4(stringToDouble(analogValue(convertedData, 4)));
+                chartBeanTemperatura.setValue_5(stringToDouble(analogValue(convertedData, 5)));
+                chartBeanTemperatura.setValue_6(stringToDouble(analogValue(convertedData, 6)));
+                chartBeanTemperatura.setValue_7(stringToDouble(analogValue(convertedData, 7)));
 
                 comPort.writeBytes(bytes_7017_Read, bytes_7017_Read.length);
                 numRead = comPort.readBytes(readBuffer, readBuffer.length);
@@ -122,6 +138,13 @@ public class DataIOServer implements Runnable {
             LOGGER_ERR.log(Level.SEVERE, " Com port error {0}", ex.getMessage());
         }
         comPort.closePort();
+        System.out.println("STOOOP");
+        jButtonStop.setEnabled(false);
+        jButtonStart.setEnabled(true);
+    }
+
+    public void stop() {
+        start = false;
     }
 
     private String analogValue(byte[] bytes, int channel) {
@@ -160,6 +183,12 @@ public class DataIOServer implements Runnable {
             bytes[i] = (byte) Integer.parseInt(stringArray[i], 16);
         }
         return bytes;
+    }
+
+    private Double stringToDouble(String analogValue) {
+        String rawString = analogValue.substring(1, 7);
+        Double stringDouble = Double.parseDouble(rawString);
+        return stringDouble;
     }
 
 }

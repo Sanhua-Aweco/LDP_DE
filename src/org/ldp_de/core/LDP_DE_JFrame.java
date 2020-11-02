@@ -71,7 +71,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private int jDialogServerSettingsHeight;
     private int jDialogServerSettingsWidth;
 
-    private static final ExecutorService EXECUTOR_RS232 = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXECUTOR_STACJA_TESTOWA = Executors.newSingleThreadExecutor();
+    private StacjaTestowa stacjaTestowa_1;
     private String[] portList;
     private String portNameTester_1;
     private boolean stanPortuTester_1;
@@ -99,7 +100,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         }
 
         initComponents();
-
+        getPorts();
+        
         EventQueue.invokeLater(() -> {
             LogFormatter logFormatter = new LogFormatter();
 
@@ -124,9 +126,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         TraySystem traySystem = new TraySystem(this, connection);
         traySystem.createTryIcon();
         clock();
-//        EXECUTOR_RS232.execute(new DataIOServer(jTextField1, jTextField2, jTextField3, jTextField4, jTextField5, jTextField6, jTextField7, jTextField8));
         ldp_De_FrameShow();
-
     }
 
     private void getPorts() {
@@ -135,11 +135,18 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         SerialPort serials[];
         serials = SerialPort.getCommPorts();
         for (SerialPort serial : serials) {
-            tempPortList[numports] = serial.getDescriptivePortName();
+            tempPortList[numports] = serial.getSystemPortName();
             ++numports;
         }
         portList = new String[numports];
         System.arraycopy(tempPortList, 0, portList, 0, numports);
+        jComboBoxPortTester_1.setModel(new javax.swing.DefaultComboBoxModel(portList));
+        jComboBoxPortTester_2.setModel(new javax.swing.DefaultComboBoxModel(portList));
+        jComboBoxPortTester_3.setModel(new javax.swing.DefaultComboBoxModel(portList));
+
+        jComboBoxPortTester_1.setSelectedItem(node.get("Setings.portNameTester_1", null));
+        jComboBoxPortTester_2.setSelectedItem(node.get("Setings.portNameTester_2", null));
+        jComboBoxPortTester_3.setSelectedItem(node.get("Setings.portNameTester_3", null));
     }
 
     private void ldp_De_FrameShow() {
@@ -154,6 +161,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         }
         setBounds((screenSize.width - jFrame_LDP_DE_Width) / 2, (screenSize.height - jFrame_LDP_DE_Height) / 2, jFrame_LDP_DE_Width, jFrame_LDP_DE_Height);
         LDP_DE_JFrame.this.setTitle("Stanowisko testowe LDP DE v " + node.get("Setings.version", null));
+        jButtonTest1Stop.setEnabled(false);
     }
 
     private void komunikatError(JDialog jDialog, Object message, String title) {
@@ -357,17 +365,18 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelCzas = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanelTest1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jLabel11 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        chartBean1 = new org.chartBean.core.ChartBean();
+        jButtonTest1Start = new javax.swing.JButton();
+        jButtonTest1Step_1 = new javax.swing.JButton();
+        jButtonTest1Step_2 = new javax.swing.JButton();
+        jButtonTest1Step_3 = new javax.swing.JButton();
+        jButtonTest1Step_4 = new javax.swing.JButton();
+        jLabelTest1S1S2 = new javax.swing.JLabel();
+        jLabelTest1S2S3 = new javax.swing.JLabel();
+        jLabelTest1S3S4 = new javax.swing.JLabel();
+        jLabelTest1Opis = new javax.swing.JLabel();
+        jLabelTest1NumerCyklu = new javax.swing.JLabel();
+        chartBeanTest1Temperatura = new org.chartBean.core.ChartBean();
+        jButtonTest1Stop = new javax.swing.JButton();
         jPanelTest2 = new javax.swing.JPanel();
         jPanelTest3 = new javax.swing.JPanel();
         jMenuBar = new javax.swing.JMenuBar();
@@ -1050,95 +1059,118 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelCzas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelCzas.setText("Pokaz czas");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        jButton1.setText("START");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonTest1Start.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+        jButtonTest1Start.setText("START");
+        jButtonTest1Start.setPreferredSize(new java.awt.Dimension(240, 67));
+        jButtonTest1Start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonTest1StartActionPerformed(evt);
             }
         });
 
-        jButton2.setText("STEP 1");
-        jButton2.setToolTipText("Napełnianie zbiornika wodą.");
+        jButtonTest1Step_1.setText("STEP 1");
+        jButtonTest1Step_1.setToolTipText("Napełnianie zbiornika wodą.");
 
-        jButton3.setText("STEP 2");
-        jButton3.setToolTipText("Podgrzewanie do temp. 75°C.");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonTest1Step_2.setText("STEP 2");
+        jButtonTest1Step_2.setToolTipText("Podgrzewanie do temp. 75°C.");
+        jButtonTest1Step_2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonTest1Step_2ActionPerformed(evt);
             }
         });
 
-        jLabel9.setText("->");
+        jButtonTest1Step_3.setText("STEP 3");
+        jButtonTest1Step_3.setToolTipText("Gotowanie przez 300s.");
 
-        jLabel10.setText("->");
+        jButtonTest1Step_4.setText("STEP 4");
+        jButtonTest1Step_4.setToolTipText("Opróżnianie zbiornika.");
 
-        jButton4.setText("STEP 3");
-        jButton4.setToolTipText("Gotowanie przez 300s.");
+        jLabelTest1S1S2.setText("->");
 
-        jLabel11.setText("->");
+        jLabelTest1S2S3.setText("->");
 
-        jButton5.setText("STEP 4");
-        jButton5.setToolTipText("Opróżnianie zbiornika.");
+        jLabelTest1S3S4.setText("->");
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("Numer cyklu testowego");
+        jLabelTest1Opis.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabelTest1Opis.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelTest1Opis.setText("Numer cyklu testowego");
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("0");
+        jLabelTest1NumerCyklu.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabelTest1NumerCyklu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelTest1NumerCyklu.setText("0");
+
+        chartBeanTest1Temperatura.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pomiar temperatury", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+
+        jButtonTest1Stop.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+        jButtonTest1Stop.setText("STOP");
+        jButtonTest1Stop.setPreferredSize(new java.awt.Dimension(240, 67));
+        jButtonTest1Stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTest1StopActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelTest1Layout = new javax.swing.GroupLayout(jPanelTest1);
         jPanelTest1.setLayout(jPanelTest1Layout);
         jPanelTest1Layout.setHorizontalGroup(
             jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTest1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabelTest1Opis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanelTest1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTest1Layout.createSequentialGroup()
-                        .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(chartBean1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanelTest1Layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addGroup(jPanelTest1Layout.createSequentialGroup()
+                                .addComponent(jButtonTest1Step_1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelTest1S1S2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonTest1Step_2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelTest1S2S3, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonTest1Step_3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelTest1S3S4, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(4, 4, 4)))
-                .addContainerGap())
+                                .addComponent(jButtonTest1Step_4))
+                            .addComponent(jLabelTest1NumerCyklu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(9, 9, 9))
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanelTest1Layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addComponent(jButtonTest1Start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonTest1Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(89, 89, 89))
         );
         jPanelTest1Layout.setVerticalGroup(
             jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTest1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel13)
+                .addComponent(jLabelTest1Opis)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
+                .addComponent(jLabelTest1NumerCyklu)
                 .addGap(18, 18, 18)
                 .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jButton4)
-                    .addComponent(jLabel11)
-                    .addComponent(jButton5))
+                    .addComponent(jButtonTest1Step_1)
+                    .addComponent(jButtonTest1Step_2)
+                    .addComponent(jLabelTest1S1S2)
+                    .addComponent(jLabelTest1S2S3)
+                    .addComponent(jButtonTest1Step_3)
+                    .addComponent(jLabelTest1S3S4)
+                    .addComponent(jButtonTest1Step_4))
+                .addGap(29, 29, 29)
+                .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(chartBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonTest1Start, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTest1Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1148,7 +1180,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jPanelTest2.setLayout(jPanelTest2Layout);
         jPanelTest2Layout.setHorizontalGroup(
             jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGap(0, 675, Short.MAX_VALUE)
         );
         jPanelTest2Layout.setVerticalGroup(
             jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1161,7 +1193,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jPanelTest3.setLayout(jPanelTest3Layout);
         jPanelTest3Layout.setHorizontalGroup(
             jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGap(0, 675, Short.MAX_VALUE)
         );
         jPanelTest3Layout.setVerticalGroup(
             jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1236,7 +1268,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelStopka, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1300,13 +1332,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         getPorts();
 
-        jComboBoxPortTester_1.setModel(new javax.swing.DefaultComboBoxModel(portList));
-        jComboBoxPortTester_2.setModel(new javax.swing.DefaultComboBoxModel(portList));
-        jComboBoxPortTester_3.setModel(new javax.swing.DefaultComboBoxModel(portList));
-
-        jComboBoxPortTester_1.setSelectedItem(node.get("Setings.portNameTester_1", null));
-        jComboBoxPortTester_2.setSelectedItem(node.get("Setings.portNameTester_2", null));
-        jComboBoxPortTester_3.setSelectedItem(node.get("Setings.portNameTester_3", null));
+        
         jDialogSettings.setVisible(true);
     }//GEN-LAST:event_jMenuItemUstawieniaActionPerformed
 
@@ -1458,13 +1484,15 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItemDataBaseSettingsActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonTest1StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1StartActionPerformed
+        portNameTester_1 = node.get("Setings.portNameTester_1", null);
+        stacjaTestowa_1 = new StacjaTestowa(connection, portNameTester_1, jButtonTest1Start, jButtonTest1Stop, jButtonTest1Step_1, jButtonTest1Step_2, jButtonTest1Step_3, jButtonTest1Step_4, chartBeanTest1Temperatura, jLabelTest1NumerCyklu);
+        EXECUTOR_STACJA_TESTOWA.execute(stacjaTestowa_1);
+    }//GEN-LAST:event_jButtonTest1StartActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonTest1Step_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1Step_2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonTest1Step_2ActionPerformed
 
     private void jComboBoxPortTester_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPortTester_1ActionPerformed
         if (stanPortuTester_1 == true) {
@@ -1482,17 +1510,22 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxPortTester_3ActionPerformed
 
+    private void jButtonTest1StopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1StopActionPerformed
+        stacjaTestowa_1.stop();
+    }//GEN-LAST:event_jButtonTest1StopActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.chartBean.core.ChartBean chartBean1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private org.chartBean.core.ChartBean chartBeanTest1Temperatura;
     private javax.swing.JButton jButtonAnulujServerSettings;
     private javax.swing.JButton jButtonSaveModServerSettings;
     private javax.swing.JButton jButtonSettingsCancel;
     private javax.swing.JButton jButtonSettingsSaveMod;
+    private javax.swing.JButton jButtonTest1Start;
+    private javax.swing.JButton jButtonTest1Step_1;
+    private javax.swing.JButton jButtonTest1Step_2;
+    private javax.swing.JButton jButtonTest1Step_3;
+    private javax.swing.JButton jButtonTest1Step_4;
+    private javax.swing.JButton jButtonTest1Stop;
     private javax.swing.JComboBox jComboBoxPortTester_1;
     private javax.swing.JComboBox jComboBoxPortTester_2;
     private javax.swing.JComboBox jComboBoxPortTester_3;
@@ -1500,10 +1533,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JDialog jDialogServerSettings;
     private javax.swing.JDialog jDialogSettings;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -1519,7 +1548,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCzas;
     private javax.swing.JLabel jLabelData;
     private javax.swing.JLabel jLabelDatabaseName;
@@ -1527,6 +1555,11 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelPassword;
     private javax.swing.JLabel jLabelServer;
     private javax.swing.JLabel jLabelStopka;
+    private javax.swing.JLabel jLabelTest1NumerCyklu;
+    private javax.swing.JLabel jLabelTest1Opis;
+    private javax.swing.JLabel jLabelTest1S1S2;
+    private javax.swing.JLabel jLabelTest1S2S3;
+    private javax.swing.JLabel jLabelTest1S3S4;
     private javax.swing.JLabel jLabelUser;
     private javax.swing.JLabel jLabelUserName;
     private javax.swing.JMenuBar jMenuBar;
