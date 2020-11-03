@@ -7,9 +7,9 @@ package org.ldp_de.core;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -25,10 +25,17 @@ import org.chartBean.core.ChartBean;
 public class StacjaTestowa implements Runnable {
 
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
+
     private byte[] pureData_7018P;
     private byte[] pureData_7017;
     private byte[] pureData_7067D;
     private byte[] pureData_ION6200;
+    private byte[] pureData_ION6200_V;
+    private byte[] pureData_ION6200_I;
+    
+    private final byte[] readBuffer = new byte[1024];
+    private int numRead;
+
     private final String[] array_7018P_Check = {"24", "32", "31", "4D", "0D"};
     private final String[] array_7018P_Read = {"23", "32", "31", "0D"};
     private final String[] array_7017_Check = {"24", "31", "46", "4D", "0D"};
@@ -39,8 +46,12 @@ public class StacjaTestowa implements Runnable {
     private final String[] array_ION6200_Check = {"24", "32", "30", "4D", "0D"};
     private final String[] array_ION6200_Read_V = {"40", "32", "30", "0D"};
     private final String[] array_ION6200_Read_I = {"40", "32", "30", "0D"};
-    private final byte[] readBuffer = new byte[1024];
-    private int numRead;
+    
+    private byte[] masterData_7018P;
+    private byte[] masterData_7017;
+    private byte[] masterData_7067D;
+    private byte[] masterData_ION6200;
+    
     private byte[] bytes_7018P_Check;
     private byte[] bytes_7018P_Read;
     private byte[] bytes_7017_Check;
@@ -51,6 +62,7 @@ public class StacjaTestowa implements Runnable {
     private byte[] bytes_ION6200_Check;
     private byte[] bytes_ION6200_Read_V;
     private byte[] bytes_ION6200_Read_I;
+    
     private final ConnectionPoolManager connection;
     private final String portName;
     private final int numerTestera;
@@ -64,7 +76,6 @@ public class StacjaTestowa implements Runnable {
     private final ChartBean chartBeanTemperatura;
     private final JLabel jLabelNumerCyklu;
     private boolean startData;
-    private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
     private static final ExecutorService EXECUTOR_SEKWENCJA = Executors.newSingleThreadExecutor();
     private static final ExecutorService EXECUTOR_WYKRES = Executors.newSingleThreadExecutor();
     private final SqlQueryContainer sqlQueryContainer;
@@ -72,6 +83,9 @@ public class StacjaTestowa implements Runnable {
     private int testID;
     private WykresTemperatury wykresTemperatury;
     private final DataProducer dataProducer;
+    private final IOData ioData = new IOData();
+    private final Queue<IOData> ioDataToRead = new LinkedList<>();
+    private final Queue<byte[]> bytesToWrite = new LinkedList<>();
 
     @SuppressWarnings("NonPublicExported")
 
@@ -127,41 +141,61 @@ public class StacjaTestowa implements Runnable {
             comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 0);
             if (checkComModule(comPort)) {
                 testID = sqlQueryContainer.setTestStart(numerTestera, modelGrzalki);
-                sekwencjaTestowa = new SekwencjaTestowa(startData, connection, testID, jButtonStep_1, jButtonStep_2, jButtonStep_3, jButtonStep_4, jLabelNumerCyklu);
+                sekwencjaTestowa = new SekwencjaTestowa(startData, connection, testID, ioDataToRead, jButtonStep_1, jButtonStep_2, jButtonStep_3, jButtonStep_4, jLabelNumerCyklu, bytesToWrite);
                 EXECUTOR_SEKWENCJA.execute(sekwencjaTestowa);
                 wykresTemperatury = new WykresTemperatury();
                 EXECUTOR_WYKRES.execute(wykresTemperatury);
 
                 while (startData) {
-                    comPort.writeBytes(bytes_7018P_Read, bytes_7018P_Read.length);
-                    numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                    pureData_7018P = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                    synchronized (ioDataToRead) {
+                        comPort.writeBytes(bytes_7018P_Read, bytes_7018P_Read.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_7018P = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
-                    comPort.writeBytes(bytes_7017_Read, bytes_7017_Read.length);
-                    numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                    pureData_7017 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                        comPort.writeBytes(bytes_7017_Read, bytes_7017_Read.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_7017 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
-                    comPort.writeBytes(bytes_7067D_Read, bytes_7067D_Read.length);
-                    numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                    pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                        comPort.writeBytes(bytes_7067D_Read, bytes_7067D_Read.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
-                    comPort.writeBytes(bytes_ION6200_Read_V, bytes_ION6200_Read_V.length);
-                    numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                    pureData_ION6200 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                        comPort.writeBytes(bytes_ION6200_Read_V, bytes_ION6200_Read_V.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_ION6200_V = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
 
-                    comPort.writeBytes(bytes_ION6200_Read_I, bytes_ION6200_Read_I.length);
-                    numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                    pureData_ION6200 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                        comPort.writeBytes(bytes_ION6200_Read_I, bytes_ION6200_Read_I.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_ION6200_I = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+
+                        ioDataToRead.add(ioData);
+                        ioDataToRead.notify();
+                    }
+
+                    synchronized (bytesToWrite) {
+                        while (bytesToWrite.isEmpty()) {
+                            try {
+                                bytesToWrite.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        byte[] bytes_7067D_Write = bytesToWrite.poll();
+                        comPort.writeBytes(bytes_7067D_Write, bytes_7067D_Write.length);
+                        numRead = comPort.readBytes(readBuffer, readBuffer.length);
+                        pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                    }
                 }
             }
         } catch (SerialPortInvalidPortException ex) {
             LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
             comPort.closePort();
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
             comPort.closePort();
         }
         comPort.closePort();
+        finito();
         jButtonStop.setEnabled(false);
         jButtonStart.setEnabled(true);
     }
@@ -174,14 +208,23 @@ public class StacjaTestowa implements Runnable {
         comPort.writeBytes(bytes_7018P_Check, bytes_7018P_Check.length);
         numRead = comPort.readBytes(readBuffer, readBuffer.length);
         pureData_7018P = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+        if(checkEqual(pureData_7018P, masterData_7018P)){
+            return false;
+        }
 
         comPort.writeBytes(bytes_7017_Check, bytes_7017_Check.length);
         numRead = comPort.readBytes(readBuffer, readBuffer.length);
         pureData_7017 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+        if(checkEqual(pureData_7017, masterData_7017)){
+            return false;
+        }
 
         comPort.writeBytes(bytes_7067D_Check, bytes_7067D_Check.length);
         numRead = comPort.readBytes(readBuffer, readBuffer.length);
         pureData_7067D = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+        if(checkEqual(pureData_7067D, masterData_7067D)){
+            return false;
+        }
 
         comPort.writeBytes(bytes_7067D_ResetWTD, bytes_7067D_ResetWTD.length);
         numRead = comPort.readBytes(readBuffer, readBuffer.length);
@@ -190,6 +233,24 @@ public class StacjaTestowa implements Runnable {
         comPort.writeBytes(bytes_ION6200_Check, bytes_ION6200_Check.length);
         numRead = comPort.readBytes(readBuffer, readBuffer.length);
         pureData_ION6200 = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+        if(checkEqual(pureData_ION6200, masterData_ION6200)){
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkEqual(byte[] pureData, byte[] masterData) {
+        if (pureData.length != masterData.length) {
+            return false;
+        }
+        int i;
+        int l;
+        for (i = 0, l = pureData.length; i < l; i++) {
+            if (pureData[i] != masterData[i]) {
+
+                return false;
+            }
+        }
         return true;
     }
 
@@ -211,7 +272,7 @@ public class StacjaTestowa implements Runnable {
                 chartBeanTemperatura.setValue_5(dataProducer.getTemperature(pureData_7018P, 5));
                 chartBeanTemperatura.setValue_6(dataProducer.getTemperature(pureData_7018P, 6));
                 chartBeanTemperatura.setValue_7(dataProducer.getTemperature(pureData_7018P, 7));
-                sqlQueryContainer.setTemperatury(testID,dataProducer.getTemperatureAll(pureData_7018P));
+                sqlQueryContainer.setTemperatury(testID, dataProducer.getTemperatureAll(pureData_7018P));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
