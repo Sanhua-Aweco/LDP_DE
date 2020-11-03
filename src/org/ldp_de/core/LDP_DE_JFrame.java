@@ -33,7 +33,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
@@ -59,7 +61,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private final Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
     private static final DateFormat DATEFORMAT = new SimpleDateFormat("dd MMMMMMMMM yyyy");
     private static final DateFormat DATEFORMAT2 = new SimpleDateFormat("HH:mm:ss");
-    private static final DateFormat DATEFORMAT3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ConnectionPoolManager connection = null;
     private String[] multiLineMsg;
 
@@ -79,7 +80,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private String portNameTester_2;
     private boolean stanPortuTester_2;
     private boolean stanPortuTester_3;
-    private String portNameTester_3;
 
     /**
      * Creates new form Rs232_v1JFrame
@@ -101,7 +101,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         initComponents();
         getPorts();
-        
+
         EventQueue.invokeLater(() -> {
             LogFormatter logFormatter = new LogFormatter();
 
@@ -164,8 +164,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jButtonTest1Stop.setEnabled(false);
     }
 
-    private void komunikatError(JDialog jDialog, Object message, String title) {
-        JOptionPane.showConfirmDialog(jDialog, message, title, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+    private void komunikatError(JFrame jFrame, Object message, String title) {
+        JOptionPane.showConfirmDialog(jFrame, message, title, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
     }
 
     private int komunikat(Object message, String title, int messageType, int optionType) {
@@ -377,6 +377,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelTest1NumerCyklu = new javax.swing.JLabel();
         chartBeanTest1Temperatura = new org.chartBean.core.ChartBean();
         jButtonTest1Stop = new javax.swing.JButton();
+        jTextFieldModelGrzalki = new javax.swing.JTextField();
         jPanelTest2 = new javax.swing.JPanel();
         jPanelTest3 = new javax.swing.JPanel();
         jMenuBar = new javax.swing.JMenuBar();
@@ -1059,9 +1060,16 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jLabelCzas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabelCzas.setText("Pokaz czas");
 
+        jPanelTest1.setPreferredSize(new java.awt.Dimension(850, 529));
+
         jButtonTest1Start.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
         jButtonTest1Start.setText("START");
         jButtonTest1Start.setPreferredSize(new java.awt.Dimension(240, 67));
+        jButtonTest1Start.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jButtonTest1StartStateChanged(evt);
+            }
+        });
         jButtonTest1Start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTest1StartActionPerformed(evt);
@@ -1093,10 +1101,10 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         jLabelTest1Opis.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabelTest1Opis.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTest1Opis.setText("Numer cyklu testowego");
+        jLabelTest1Opis.setText("Numer cyklu testowego ");
 
         jLabelTest1NumerCyklu.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabelTest1NumerCyklu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelTest1NumerCyklu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelTest1NumerCyklu.setText("0");
 
         chartBeanTest1Temperatura.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pomiar temperatury", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
@@ -1110,52 +1118,53 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldModelGrzalki.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.disabledBackground"));
+        jTextFieldModelGrzalki.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jTextFieldModelGrzalki.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldModelGrzalki.setBorder(javax.swing.BorderFactory.createTitledBorder("Model grzałki"));
+
         javax.swing.GroupLayout jPanelTest1Layout = new javax.swing.GroupLayout(jPanelTest1);
         jPanelTest1.setLayout(jPanelTest1Layout);
         jPanelTest1Layout.setHorizontalGroup(
             jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTest1Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jLabelTest1Opis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jButtonTest1Step_1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTest1S1S2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonTest1Step_2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTest1S2S3, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonTest1Step_3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTest1S3S4, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonTest1Step_4))
+                    .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jButtonTest1Start, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonTest1Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldModelGrzalki, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelTest1Layout.createSequentialGroup()
+                        .addComponent(jLabelTest1Opis)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTest1NumerCyklu)))
                 .addContainerGap())
-            .addGroup(jPanelTest1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelTest1Layout.createSequentialGroup()
-                        .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addGroup(jPanelTest1Layout.createSequentialGroup()
-                                .addComponent(jButtonTest1Step_1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelTest1S1S2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonTest1Step_2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelTest1S2S3, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonTest1Step_3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelTest1S3S4, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonTest1Step_4))
-                            .addComponent(jLabelTest1NumerCyklu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(9, 9, 9))
-                    .addGroup(jPanelTest1Layout.createSequentialGroup()
-                        .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanelTest1Layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(jButtonTest1Start, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonTest1Stop, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(89, 89, 89))
         );
         jPanelTest1Layout.setVerticalGroup(
             jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTest1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelTest1Opis)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelTest1NumerCyklu)
+                .addComponent(jTextFieldModelGrzalki, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23)
+                .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelTest1Opis)
+                    .addComponent(jLabelTest1NumerCyklu))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonTest1Step_1)
@@ -1165,8 +1174,8 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
                     .addComponent(jButtonTest1Step_3)
                     .addComponent(jLabelTest1S3S4)
                     .addComponent(jButtonTest1Step_4))
-                .addGap(29, 29, 29)
-                .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(chartBeanTest1Temperatura, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanelTest1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonTest1Start, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1180,7 +1189,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jPanelTest2.setLayout(jPanelTest2Layout);
         jPanelTest2Layout.setHorizontalGroup(
             jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 675, Short.MAX_VALUE)
+            .addGap(0, 601, Short.MAX_VALUE)
         );
         jPanelTest2Layout.setVerticalGroup(
             jPanelTest2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1193,7 +1202,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         jPanelTest3.setLayout(jPanelTest3Layout);
         jPanelTest3Layout.setHorizontalGroup(
             jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 675, Short.MAX_VALUE)
+            .addGap(0, 601, Short.MAX_VALUE)
         );
         jPanelTest3Layout.setVerticalGroup(
             jPanelTest3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1265,21 +1274,27 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPaneKomunikatySystemowe)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabelStopka, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabelCzas, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPaneKomunikatySystemowe, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelCzas, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1332,7 +1347,6 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
 
         getPorts();
 
-        
         jDialogSettings.setVisible(true);
     }//GEN-LAST:event_jMenuItemUstawieniaActionPerformed
 
@@ -1485,8 +1499,16 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemDataBaseSettingsActionPerformed
 
     private void jButtonTest1StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1StartActionPerformed
+        if (jTextFieldModelGrzalki.getText().isEmpty()||jTextFieldModelGrzalki.getText().trim() == null) {
+            komunikatError(LDP_DE_JFrame.this, "Wprowadz model grzałki.", "Kontrola wprowadzania danych");
+            jTextFieldModelGrzalki.requestFocus();
+            return;
+        }
+        
+        jTextFieldModelGrzalki.setEditable(false);
+        String modelGrzalkiTester_1 = jTextFieldModelGrzalki.getText().toUpperCase().trim();
         portNameTester_1 = node.get("Setings.portNameTester_1", null);
-        stacjaTestowa_1 = new StacjaTestowa(connection, portNameTester_1, jButtonTest1Start, jButtonTest1Stop, jButtonTest1Step_1, jButtonTest1Step_2, jButtonTest1Step_3, jButtonTest1Step_4, chartBeanTest1Temperatura, jLabelTest1NumerCyklu);
+        stacjaTestowa_1 = new StacjaTestowa(connection, portNameTester_1, 1, modelGrzalkiTester_1, jButtonTest1Start, jButtonTest1Stop, jButtonTest1Step_1, jButtonTest1Step_2, jButtonTest1Step_3, jButtonTest1Step_4, chartBeanTest1Temperatura, jLabelTest1NumerCyklu);
         EXECUTOR.execute(stacjaTestowa_1);
     }//GEN-LAST:event_jButtonTest1StartActionPerformed
 
@@ -1511,8 +1533,16 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxPortTester_3ActionPerformed
 
     private void jButtonTest1StopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1StopActionPerformed
-        stacjaTestowa_1.stop();
+        stacjaTestowa_1.finito();
+        jTextFieldModelGrzalki.setEditable(true);
     }//GEN-LAST:event_jButtonTest1StopActionPerformed
+
+    private void jButtonTest1StartStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jButtonTest1StartStateChanged
+if (!(jButtonTest1Start.isEnabled())) {
+            jTextFieldModelGrzalki.setEditable(true);
+            jTextFieldModelGrzalki.setBackground(new Color(240, 240, 240));
+        }
+    }//GEN-LAST:event_jButtonTest1StartStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.chartBean.core.ChartBean chartBeanTest1Temperatura;
@@ -1609,6 +1639,7 @@ public class LDP_DE_JFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextFieldDatabaseName;
     private javax.swing.JTextField jTextFieldInstance;
+    private javax.swing.JTextField jTextFieldModelGrzalki;
     private javax.swing.JTextField jTextFieldServer;
     private javax.swing.JTextField jTextFieldUserName;
     private javax.swing.JTextPane jTextPaneKomunikatySystemowe;
