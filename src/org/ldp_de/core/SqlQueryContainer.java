@@ -55,18 +55,19 @@ class SqlQueryContainer {
         int result = -1;
         SQLServerConnection conn = connection.getConnectionFromPool();
         try {
-            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_testTemperatury(?,?,?,?,?,?,?,?,?)}")) {
-                csmt.setDouble(1, temperatureAll[0]);
-                csmt.setDouble(2, temperatureAll[1]);
-                csmt.setDouble(3, temperatureAll[2]);
-                csmt.setDouble(4, temperatureAll[3]);
-                csmt.setDouble(5, temperatureAll[4]);
-                csmt.setDouble(6, temperatureAll[5]);
-                csmt.setDouble(7, temperatureAll[6]);
-                csmt.setDouble(8, temperatureAll[7]);
-                csmt.registerOutParameter(9, Types.INTEGER);
+            try (SQLServerCallableStatement csmt = (SQLServerCallableStatement) conn.prepareCall("{call sp_testTemperatury(?,?,?,?,?,?,?,?,?,?)}")) {
+                csmt.setInt(1, testID);
+                csmt.setDouble(2, temperatureAll[0]);
+                csmt.setDouble(3, temperatureAll[1]);
+                csmt.setDouble(4, temperatureAll[2]);
+                csmt.setDouble(5, temperatureAll[3]);
+                csmt.setDouble(6, temperatureAll[4]);
+                csmt.setDouble(7, temperatureAll[5]);
+                csmt.setDouble(8, temperatureAll[6]);
+                csmt.setDouble(9, temperatureAll[7]);
+                csmt.registerOutParameter(10, Types.INTEGER);
                 csmt.execute();
-                result = csmt.getInt(9);
+                result = csmt.getInt(10);
             } catch (SQLServerException | SQLTimeoutException ex) {
                 connection.returnConnectionToPool(conn);
                 LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
