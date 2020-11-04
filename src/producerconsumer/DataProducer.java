@@ -17,6 +17,8 @@ import java.util.concurrent.BlockingQueue;
 public class DataProducer implements Runnable {
 
     private final DataIOServer.Option option;
+    private final DataIOServer dataIOServer;
+
 
     public enum Option {
         Data_7018P, Data_7017, Data_7067D
@@ -27,7 +29,8 @@ public class DataProducer implements Runnable {
     private final byte[] dataWrite;
     private final byte[] dataRead;
 
-    public DataProducer(BlockingQueue<Message> dataQueue, byte[] dataWrite, byte[] dataRead,DataIOServer.Option option) {
+    public DataProducer(DataIOServer dataIOServer,BlockingQueue<Message> dataQueue, byte[] dataWrite, byte[] dataRead,DataIOServer.Option option) {
+        this.dataIOServer=dataIOServer;
         this.dataQueue = dataQueue;
         this.dataWrite = dataWrite;
         this.dataRead = dataRead;
@@ -41,12 +44,13 @@ public class DataProducer implements Runnable {
             Message msg = new Message(dataWrite, option);
             try {
                 try {
-                    Thread.sleep(Duration.ofSeconds(GENERATOR.nextInt(5)).toMillis());
+                    Thread.sleep(Duration.ofSeconds(GENERATOR.nextInt(2)).toMillis());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
                 dataQueue.put(msg);
-                System.out.println("Produced " + Arrays.toString(msg.getDataWrite()) + " Odbiorca " + msg.getDataRead() + " Bufor " + Arrays.toString(dataRead));
+                System.out.println("Produced " + Arrays.toString(msg.getDataWrite()) + " Odbiorca " + msg.getDataRead() + " Bufor " +dataIOServer.getData() );
+                dataIOServer.getData();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

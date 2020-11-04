@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  */
 public class DataIOServer extends Thread {
 
+    private int x;
+
     public enum Option {
         Data_7018P, Data_7017, Data_7067D
     }
@@ -47,9 +49,9 @@ public class DataIOServer extends Thread {
     public void run() {
 
         initMessage();
-        EXEC.execute(new DataProducer(dataQueue, bytes_7018P, data_7018P, Option.Data_7018P));
-        EXEC.execute(new DataProducer(dataQueue, bytes_7017, data_7017, Option.Data_7017));
-        EXEC.execute(new DataProducer(dataQueue, bytes_7067D, data_7067D, Option.Data_7067D));
+        EXEC.execute(new DataProducer(this,dataQueue, bytes_7018P, data_7018P, Option.Data_7018P));
+        EXEC.execute(new DataProducer(this,dataQueue, bytes_7017, data_7017, Option.Data_7017));
+        EXEC.execute(new DataProducer(this,dataQueue, bytes_7067D, data_7067D, Option.Data_7067D));
        
         System.out.println("Producer and Consumer has been started");
         while (true) {
@@ -76,6 +78,10 @@ public class DataIOServer extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public int getData(){
+        return x++;
     }
     
     private void initMessage() {
