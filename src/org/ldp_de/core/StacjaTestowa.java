@@ -212,12 +212,17 @@ public class StacjaTestowa implements Runnable {
 
                     synchronized (dataToWrite) {
                         while (dataToWrite.isEmpty()) {
-                            dataToWrite.wait();
+                            try {
+                                dataToWrite.wait();
+                            } catch (InterruptedException ex) {
+                                LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
+                            }
                         }
-                        byte[] bytes_7067D_Write = dataToWrite.poll();
-                        comPort.writeBytes(bytes_7067D_Write, bytes_7067D_Write.length);
+                        DataWrite x = dataToWrite.poll();
+                        byte[] w = x.getPureData();
+                        comPort.writeBytes(x.getBytesWrite(), x.getBytesWrite().length);
                         numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                        pureData = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
+                        w = Arrays.copyOfRange(readBuffer, 1, numRead - 1);
                     }
                 }
             }
@@ -297,7 +302,7 @@ public class StacjaTestowa implements Runnable {
         public void run() {
             while (startData) {
                 synchronized (dataToWrite) {
-                dataToWrite.add(1,bytes_7018P_Read);
+                dataToWrite.add(dataWrite.);
                 dataToWrite.notify();
             }
 //                chartBeanTemperatura.setValue_0(dataProducer.getTemperature(pureData_7018P, 0));

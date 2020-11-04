@@ -26,5 +26,12 @@ class DataWrite {
         public byte[] getPureData() {
             return pureData;
         }
-        
+
+         public byte[] setBytesWrite() {
+            return bytesWrite;
+        }
+
+        public byte[] setPureData() {
+            return pureData;
+        }
 }
