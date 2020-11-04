@@ -16,6 +16,10 @@ import java.util.concurrent.Executors;
  */
 public class DataIOServer extends Thread {
 
+    public enum Option {
+        Data_7018P, Data_7017, Data_7067D
+    }
+    
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
     private final BlockingQueue<Message> dataQueue;
     private Runnable producer1;
@@ -45,9 +49,9 @@ public class DataIOServer extends Thread {
     public void run() {
         
         initMessage();
-        producer1 = new DataProducer(dataQueue,bytes_7018P,Data_7018P);
-        producer2 = new DataProducer(dataQueue,bytes_7017,Data_7017);
-        producer3 = new DataProducer(dataQueue,bytes_7067D,Data_7067D);
+        producer1 = new DataProducer(dataQueue,bytes_7018P,Data_7018P,Option.Data_7018P);
+        producer2 = new DataProducer(dataQueue,bytes_7017,Data_7017,Option.Data_7017);
+        producer3 = new DataProducer(dataQueue,bytes_7067D,Data_7067D,Option.Data_7067D);
         
         new Thread(producer1).start();
         new Thread(producer2).start();
@@ -59,7 +63,7 @@ public class DataIOServer extends Thread {
                 while(true) {
                 message = dataQueue.take();
                     Thread.sleep(10);
-                    System.out.println("Consumed " + Arrays.toString(message.getDataWrite()) + "Send " + Arrays.toString(message.getDataRead()));
+                    System.out.println("Consumed " + Arrays.toString(message.getDataWrite()) + "Send " + message.getDataRead());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

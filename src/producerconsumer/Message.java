@@ -10,17 +10,21 @@ package producerconsumer;
  * @author User
  */
 public class Message {
+
+    public enum Option {
+        Data_7018P, Data_7017, Data_7067D
+    }
     
     private final byte[] dataWrite;
-    private final byte[] dataRead;
+    private final DataIOServer.Option option;
     
-    public Message(byte[] dataWrite,byte[] dataRead){
+    public Message(byte[] dataWrite,DataIOServer.Option option){
         this.dataWrite=dataWrite;
-        this.dataRead=dataRead;
+        this.option=option;
     }
 
-    public byte[]getDataRead() {
-        return dataRead;
+    public DataIOServer.Option getDataRead() {
+        return option;
     }
     
     public byte[]getDataWrite() {

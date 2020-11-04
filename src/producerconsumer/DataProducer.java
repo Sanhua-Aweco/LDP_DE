@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
+import static producerconsumer.Message.Option.Data_7018P;
 
 /**
  *
@@ -16,6 +17,12 @@ import java.util.concurrent.BlockingQueue;
  */
 public class DataProducer implements Runnable {
 
+    private DataIOServer.Option option;
+
+    public enum Option {
+        Data_7018P, Data_7017, Data_7067D
+    }
+    
     private static final Random GENERATOR = new Random();
     private final BlockingQueue<Message> dataQueue;
     private byte[] dataWrite;
@@ -25,25 +32,26 @@ public class DataProducer implements Runnable {
         this.dataQueue = dataQueue;
     }
 
-    public DataProducer(BlockingQueue<Message> dataQueue, byte[] dataWrite, byte[] dataRead) {
+    public DataProducer(BlockingQueue<Message> dataQueue, byte[] dataWrite, byte[] dataRead,DataIOServer.Option option) {
         this.dataQueue = dataQueue;
         this.dataWrite = dataWrite;
         this.dataRead = dataRead;
+        this.option=option;
     }
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         while (true) {
-            Message msg = new Message(dataWrite, dataRead);
+            Message msg = new Message(dataWrite, option);
             try {
                 try {
-                    Thread.sleep(Duration.ofSeconds(GENERATOR.nextInt(1)).toMillis());
+                    Thread.sleep(Duration.ofSeconds(GENERATOR.nextInt(10)).toMillis());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
                 dataQueue.put(msg);
-                System.out.println("Produced " + Arrays.toString(msg.getDataWrite()) + " Odbiorca " + Arrays.toString(msg.getDataRead()));
+                System.out.println("Produced " + Arrays.toString(msg.getDataWrite()) + " Odbiorca " + msg.getDataRead());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
