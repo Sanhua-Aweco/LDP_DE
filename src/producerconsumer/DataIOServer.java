@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,23 +21,19 @@ public class DataIOServer extends Thread {
     public enum Option {
         Data_7018P, Data_7017, Data_7067D
     }
-    
+
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
     private final BlockingQueue<Message> dataQueue;
-    private Runnable producer1;
-    private Runnable producer2;
-    private Runnable producer3;
-    
     private final MessageCreator messageCreator = new MessageCreator();
 
     private byte[] bytes_7018P;
     private byte[] bytes_7017;
     private byte[] bytes_7067D;
-    
-    private byte[] Data_7018P;
-    private byte[] Data_7017;
-    private byte[] Data_7067D;
-    
+
+    private byte[] data_7018P;
+    private byte[] data_7017;
+    private byte[] data_7067D;
+
     private final String[] array_7018P = {"23", "32", "31", "0D"};
     private final String[] array_7017 = {"23", "31", "46", "0D"};
     private final String[] array_7067D = {"40", "32", "30", "0D"};
@@ -47,23 +45,32 @@ public class DataIOServer extends Thread {
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
-        
+
         initMessage();
-        producer1 = new DataProducer(dataQueue,bytes_7018P,Data_7018P,Option.Data_7018P);
-        producer2 = new DataProducer(dataQueue,bytes_7017,Data_7017,Option.Data_7017);
-        producer3 = new DataProducer(dataQueue,bytes_7067D,Data_7067D,Option.Data_7067D);
-        
-        new Thread(producer1).start();
-        new Thread(producer2).start();
-        new Thread(producer3).start();
+        EXEC.execute(new DataProducer(dataQueue, bytes_7018P, data_7018P, Option.Data_7018P));
+        EXEC.execute(new DataProducer(dataQueue, bytes_7017, data_7017, Option.Data_7017));
+        EXEC.execute(new DataProducer(dataQueue, bytes_7067D, data_7067D, Option.Data_7067D));
+       
         System.out.println("Producer and Consumer has been started");
         while (true) {
             try {
                 Message message;
-                while(true) {
-                message = dataQueue.take();
+                while (true) {
+                    message = dataQueue.take();
+                    byte[] dataWrite = message.getDataWrite();
+                    switch (message.getDataRead()) {
+                        case Data_7018P:
+                            data_7018P = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            break;
+                        case Data_7017:
+                            data_7017 = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            break;
+                        case Data_7067D:
+                            data_7067D = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            break;
+                    }
                     Thread.sleep(10);
-                    System.out.println("Consumed " + Arrays.toString(message.getDataWrite()) + "Send " + message.getDataRead());
+                    System.out.println("Consumed " + Arrays.toString(message.getDataWrite()) + " Send " + message.getDataRead());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
