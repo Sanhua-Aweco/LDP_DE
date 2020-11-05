@@ -5,6 +5,9 @@
  */
 package producerconsumer;
 
+import com.fazecast.jSerialComm.SerialPort;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -18,79 +21,124 @@ import java.util.logging.Logger;
  */
 public class DataIOServer extends Thread {
 
-    private int x;
-
-    public enum Option {
-        Data_7018P, Data_7017, Data_7067D
-    }
+    private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
 
     private static final ExecutorService EXEC = Executors.newCachedThreadPool();
     private final BlockingQueue<Message> dataQueue;
-    private final MessageCreator messageCreator = new MessageCreator();
 
-    private byte[] bytes_7018P;
-    private byte[] bytes_7017;
-    private byte[] bytes_7067D;
+    private SerialPort comPort;
+    private final byte[] readBuffer = new byte[64];
 
     private byte[] data_7018P;
     private byte[] data_7017;
     private byte[] data_7067D;
+    private byte[] data_ION6200_V;
+    private byte[] data_ION6200_I;
 
-    private final String[] array_7018P = {"23", "32", "31", "0D"};
-    private final String[] array_7017 = {"23", "31", "46", "0D"};
-    private final String[] array_7067D = {"40", "32", "30", "0D"};
+    Thread thread_7018P;
+    Thread thread_7017;
+    Thread thread_7067D;
+    Thread thread_ION6200_V;
+    Thread thread_ION6200_I;
+
+    public enum Option {
+        Data_7018P, Data_7017, Data_7067D,Data_ION6200_V,Data_ION6200_I
+    }
 
     public DataIOServer(BlockingQueue<Message> dataQueue) {
         this.dataQueue = dataQueue;
+        initSerialPort("COM3", 9600);
     }
 
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
+        try {
+            comPort.openPort();
+            comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100, 0);
 
-        initMessage();
-        EXEC.execute(new DataProducer(this,dataQueue, bytes_7018P, data_7018P, Option.Data_7018P));
-        EXEC.execute(new DataProducer(this,dataQueue, bytes_7017, data_7017, Option.Data_7017));
-        EXEC.execute(new DataProducer(this,dataQueue, bytes_7067D, data_7067D, Option.Data_7067D));
-       
-        System.out.println("Producer and Consumer has been started");
-        while (true) {
-            try {
+            DataProducer_7018P dataProducer_7018P = new DataProducer_7018P(this, dataQueue);
+            DataProducer_7017 dataProducer_7017 = new DataProducer_7017(this, dataQueue);
+            DataProducer_7067D dataProducer_7067D = new DataProducer_7067D(this, dataQueue);
+            DataProducer_ION6200_V dataProducer_ION6200_V = new DataProducer_ION6200_V(this, dataQueue);
+            DataProducer_ION6200_I dataProducer_ION6200_I = new DataProducer_ION6200_I(this, dataQueue);
+
+            thread_7018P = new Thread(dataProducer_7018P);
+            thread_7017 = new Thread(dataProducer_7017);
+            thread_7067D = new Thread(dataProducer_7067D);
+            thread_ION6200_V = new Thread(dataProducer_ION6200_V);
+            thread_ION6200_I = new Thread(dataProducer_ION6200_I);
+
+            thread_7018P.start();
+            thread_7017.start();
+            thread_7067D.start();
+            thread_ION6200_V.start();
+            thread_ION6200_I.start();
+
+            while (true) {
                 Message message;
                 while (true) {
                     message = dataQueue.take();
                     byte[] dataWrite = message.getDataWrite();
                     switch (message.getDataRead()) {
                         case Data_7018P:
-                            data_7018P = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            data_7018P = comReadWrite(comPort, dataWrite, readBuffer);
                             break;
                         case Data_7017:
-                            data_7017 = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            data_7017 = comReadWrite(comPort, dataWrite, readBuffer);
                             break;
                         case Data_7067D:
-                            data_7067D = Arrays.copyOfRange(dataWrite, 1, dataWrite.length-1);
+                            data_7067D = comReadWrite(comPort, dataWrite, readBuffer);
                             break;
                     }
-                    Thread.sleep(10);
-                    System.out.println("Consumed " + Arrays.toString(message.getDataWrite()) + " Send " + message.getDataRead());
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException ex) {
+            String exceptionMessage = getStackTrace(ex);
+            LOGGER_ERR.log(Level.SEVERE, exceptionMessage);
         }
     }
-    
-    public int getData(){
-        return x++;
+
+    public static String getStackTrace(final Throwable throwable) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
-    
-    private void initMessage() {
-        bytes_7018P = new byte[array_7018P.length];
-        messageCreator.setFillBytes(array_7018P, bytes_7018P);
-        bytes_7017 = new byte[array_7017.length];
-        messageCreator.setFillBytes(array_7017, bytes_7017);
-        bytes_7067D = new byte[array_7067D.length];
-        messageCreator.setFillBytes(array_7067D, bytes_7067D);
+
+    private void initSerialPort(String name, int baud) {
+        if (comPort != null && comPort.isOpen()) {
+            comPort.closePort();
+        }
+        comPort = SerialPort.getCommPort(name);
+        comPort.setParity(SerialPort.NO_PARITY);
+        comPort.setNumStopBits(SerialPort.ONE_STOP_BIT);
+        comPort.setNumDataBits(8);
+        comPort.setBaudRate(baud);
+    }
+
+    private byte[] comReadWrite(SerialPort comPort, byte[] dataWrite, byte[] readBuffer) {
+        comPort.writeBytes(dataWrite, dataWrite.length);
+        byte[] copyOfRange = null;
+        try {
+            copyOfRange = Arrays.copyOfRange(readBuffer, 1, comPort.readBytes(readBuffer, readBuffer.length) - 1);
+        } catch (IllegalArgumentException ex) {
+            String exceptionMessage = getStackTrace(ex);
+            LOGGER_ERR.log(Level.SEVERE, exceptionMessage);
+        }
+        return copyOfRange;
+    }
+
+    public byte[] getData_7018P() {
+        return data_7018P;
+    }
+
+    public byte[] getData_7017() {
+        return data_7017;
+    }
+
+    public byte[] getData_7067D() {
+        return data_7067D;
     }
 
 }

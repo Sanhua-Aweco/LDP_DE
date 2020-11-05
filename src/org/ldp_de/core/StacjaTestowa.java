@@ -218,8 +218,6 @@ public class StacjaTestowa implements Runnable {
                                 LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
                             }
                         }
-                        DataWrite x = dataToWrite.poll();
-                        byte[] w = x.getPureData();
                         comPort.writeBytes(x.getBytesWrite(), x.getBytesWrite().length);
                         numRead = comPort.readBytes(readBuffer, readBuffer.length);
                         w = Arrays.copyOfRange(readBuffer, 1, numRead - 1);

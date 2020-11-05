@@ -1,6 +1,8 @@
 package org.ldp_de.core;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.*;
@@ -14,7 +16,6 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 @SuppressWarnings("ClassWithMultipleLoggers")
 public class Main {
-
 
     private static final Logger LOGGER_ERR = Logger.getLogger("LOG_ERR.log");
     private static final Logger LOGGER_INF = Logger.getLogger("LOG_INF.log");
@@ -41,13 +42,21 @@ public class Main {
             FileFormatter fileFormatter = new FileFormatter();
             FileHandlerErr.setFormatter(fileFormatter);
             FileHandlerInf.setFormatter(fileFormatter);
-            
+
             SwingUtilities.invokeLater(() -> {
                 new LDP_DE_JFrame().setVisible(true);
             });
         } catch (IOException | SecurityException ex) {
-            LOGGER_ERR.log(Level.SEVERE, ex.getMessage());
+            String exceptionMessage = getStackTrace(ex);
+            LOGGER_ERR.log(Level.SEVERE, exceptionMessage);
         }
+    }
+
+    public static String getStackTrace(final Throwable throwable) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 
 }
