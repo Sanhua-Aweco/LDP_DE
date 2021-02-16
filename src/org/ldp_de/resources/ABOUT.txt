@@ -1,5 +1,0 @@
-﻿<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<h2 style="text-align: left; padding-left: 30px;"><strong>Serwis Mini</strong></h2>
-<p style="padding-left: 30px;">Program wspierający obsługę działań serwisowych w dziale UR.</p>
-<p style="padding-left: 30px;">Program wykorzystuje rozwiązania :<br />- <em><a href="https://commons.wikimedia.org/wiki/GNOME_Desktop_icons" target="_blank" rel="noopener">GNOME Desktop icons</a></em><br />- <a href="https://commons.wikimedia.org/wiki/Tango_icons" target="_blank" rel="noopener"><em>Tango icons</em></a><br />- <a href="https://www.microsoft.com/pl-pl/sql-server/sql-server-editions-express" target="_blank" rel="noopener"><em>SQL Server 2017 Express Edition</em></a><br />- <a href="https://www.microsoft.com/en-us/download/details.aspx?id=11774" target="_blank" rel="noopener"><em>Microsoft JDBC Driver 6.0 for SQL Server</em></a><br />- <a href="IText%204" target="_blank" rel="noopener"><em>IText 4</em></a><br />- <a href="https://github.com/LGoodDatePicker/LGoodDatePicker" target="_blank" rel="noopener"><em>Lgood date picker</em></a></p>
-<p style="padding-left: 30px;">&nbsp;</p>
